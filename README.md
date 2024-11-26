@@ -22,6 +22,7 @@ Visualizar informações detalhadas de cada componente do restaurante.
 4. Views para Testes e Consultas
 Conjunto de views SQL criadas para simplificar o acesso às informações do banco de dados.
 Exemplos incluem relatórios de vendas, estoque de produtos e desempenho de funcionários.
+
 Como Usar 🚀
 
 Configuração do Banco de Dados
@@ -37,9 +38,13 @@ Explorando o Diagrama EER
 Abra o arquivo na pasta docs/ para visualizar o modelo EER, que serve como base para o design do banco de dados.
 
 Tecnologias Utilizadas 🛠️
+
 Banco de Dados: MySQL/PostgreSQL
+
 Linguagem de Programação: Python/JavaScript (para a interface gráfica)
+
 Ferramenta de Modelagem: MySQL Workbench, Draw.io ou similar
+
 Framework de Interface: (Especifique, ex.: Tkinter, React, Electron)
 Contribuições 🤝
 

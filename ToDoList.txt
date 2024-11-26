@@ -1,0 +1,6 @@
+Coisas para fazer:
+1 - Gerar o diagrama na ferramenta case do MySQL/PostGree - [ ]
+2 - Traduzir para SQL - [ ]
+3 - Fazer a Interface Gráfica com alguma linguagem a escolher - [ ]
+4 - Implementar views para o SGBD - [ ]
+5 - Fazer um relatório usando o OverLeaf - [ ]

@@ -3,4 +3,4 @@ Coisas para fazer:
 2 - Traduzir para SQL - [ ]
 3 - Fazer a Interface Gráfica com alguma linguagem a escolher - [ ]
 4 - Implementar views para o SGBD - [ ]
-5 - Fazer um relatório usando o OverLeaf - [ ]
+5 - Fazer um relatório usando o OverLeaf/Docs - [ ]

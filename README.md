@@ -1,8 +1,10 @@
 # grupo5-CDI-20242-tg2
 Sistema de Gerenciamento de Banco de Dados para Restaurante 🍽️
+
 Bem-vindo ao repositório do nosso Sistema de Gerenciamento de Banco de Dados (SGBD) desenvolvido para atender as necessidades de um restaurante. Este projeto tem como objetivo fornecer uma solução robusta e intuitiva para o gerenciamento de dados do restaurante, desde o cadastro de clientes e pedidos até a organização de produtos, cardápios e funcionários.
 
 Estrutura do Projeto 📂
+
 Este repositório contém os seguintes componentes principais:
 
 1. Diagrama EER (Entidade-Relacionamento Estendido)
@@ -21,6 +23,7 @@ Visualizar informações detalhadas de cada componente do restaurante.
 Conjunto de views SQL criadas para simplificar o acesso às informações do banco de dados.
 Exemplos incluem relatórios de vendas, estoque de produtos e desempenho de funcionários.
 Como Usar 🚀
+
 Configuração do Banco de Dados
 Execute o script SQL fornecido na pasta sql/ para criar e popular o banco de dados.
 
@@ -39,10 +42,15 @@ Linguagem de Programação: Python/JavaScript (para a interface gráfica)
 Ferramenta de Modelagem: MySQL Workbench, Draw.io ou similar
 Framework de Interface: (Especifique, ex.: Tkinter, React, Electron)
 Contribuições 🤝
+
 Contribuições são bem-vindas! Se você tiver sugestões, melhorias ou encontrar problemas, fique à vontade para abrir uma issue ou enviar um pull request.
 
 Licença 📄
+
 Este projeto é licenciado sob a Licença MIT. Sinta-se livre para usar e modificar conforme necessário.
 
 Agradecemos por explorar nosso projeto! 💡
+
 Equipe de Desenvolvimento
+
+-Raul Hohgraefe da Cruz

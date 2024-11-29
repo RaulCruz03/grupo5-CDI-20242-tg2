@@ -64,3 +64,5 @@ Agradecemos por explorar nosso projeto! 💡
 
 
 https://github.com/mariadb-developers/java-quickstart
+https://www.youtube.com/watch?v=B0zIip82tAQ&list=PLlm3ebwe5px-LA8qIqYb5aM4-zl5c1G95
+https://mariadb.com/resources/blog/how-to-connect-java-applications-to-mariadb-using-jdbc/

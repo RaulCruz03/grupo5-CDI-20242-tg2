@@ -61,3 +61,6 @@ Agradecemos por explorar nosso projeto! 💡
 **Equipe de Desenvolvimento**
 
 -Raul Hohgraefe da Cruz
+
+
+https://github.com/mariadb-developers/java-quickstart

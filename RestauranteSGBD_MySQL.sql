@@ -14,15 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+CREATE DATABASE IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
 USE `mydb` ;
-
--- -----------------------------------------------------
--- Table `mydb`.``
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`` (
-)
-ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------

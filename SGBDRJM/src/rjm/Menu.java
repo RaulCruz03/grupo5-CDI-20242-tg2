@@ -9,13 +9,10 @@ import javax.swing.JTextField;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Menu extends JFrame {
 
@@ -61,62 +58,46 @@ public class Menu extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Identificador:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
-		JButton btnFuncionario = new JButton("Entrar como funcionário");
-		btnFuncionario.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JButton btnNewButton = new JButton("Entrar como funcionário");
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JButton btnGerente = new JButton("Entrar como gerente");
-		btnGerente.setFont(new Font("Tahoma", Font.BOLD, 15));
-		
-		JButton btnModoSeguro = new JButton("Entrar no modo seguro");
-		btnModoSeguro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(btnModoSeguro, "Entrando em modo seguro, por favor cadastre credenciais de gerência.");
-				ModoSeguro ms = new ModoSeguro();
-				ms.setVisible(true);
-				dispose();
-			}
-		});
-		btnModoSeguro.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JButton btnNewButton_1 = new JButton("Entrar como gerente");
+		btnNewButton_1.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(173)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(87)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblNewLabel_1)
-									.addGap(43)
-									.addComponent(textField, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
-								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 18, GroupLayout.PREFERRED_SIZE)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(btnGerente, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnFuncionario)
-										.addComponent(btnModoSeguro, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
-									.addGap(6)))))
-					.addContainerGap(102, Short.MAX_VALUE))
+							.addComponent(lblNewLabel_1)
+							.addGap(43)
+							.addComponent(textField, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnNewButton))
+							.addGap(6)))
+					.addContainerGap(85, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGap(30)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel_1))
+					.addGap(26)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnFuncionario, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnGerente, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-					.addComponent(btnModoSeguro, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addGap(19))
+					.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(30, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

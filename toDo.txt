@@ -1,0 +1,12 @@
+Tela do funcionário:
+Crud cliente
+Crud pedido
+
+Tela do gerente:
+Crud funcionário (cozinheiro e atendente)
+Crud evento
+Crud prato
+Crud ingrediente
+Crud fornecedor
+Crud mesa
+

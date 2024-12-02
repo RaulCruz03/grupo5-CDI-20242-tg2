@@ -1,6 +1,12 @@
 package rjm;
 
 import java.awt.EventQueue;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,7 +27,7 @@ public class Menu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField txtID;
 
 	/**
 	 * Launch the application.
@@ -50,9 +56,9 @@ public class Menu extends JFrame {
 
 		setContentPane(contentPane);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textField.setColumns(10);
+		txtID = new JTextField();
+		txtID.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtID.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Login");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -65,6 +71,37 @@ public class Menu extends JFrame {
 		btnFuncionario.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton btnGerente = new JButton("Entrar como gerente");
+		btnGerente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try (Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mydb", "root", "senha");) {
+					
+					String idString = txtID.getText();
+					
+					if (idString.equals("")) {
+						idString = "0";
+					}
+					
+					Integer id = Integer.parseInt(idString);
+					
+					String checkIDQuery = "SELECT CodGerente FROM Gerente WHERE CodGerente = " + id;
+					
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery(checkIDQuery);
+					
+					if (resultSet.next()) {
+						ModoGerente md = new ModoGerente();
+						md.setVisible(true);
+					    dispose();
+					} else {
+						JOptionPane.showMessageDialog(btnGerente, "ID inválido.");
+					}
+					
+			} catch (SQLException ex) {
+	            ex.printStackTrace();
+	        }
+				
+		}
+		});
 		btnGerente.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton btnModoSeguro = new JButton("Entrar no modo seguro");
@@ -91,7 +128,7 @@ public class Menu extends JFrame {
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblNewLabel_1)
 									.addGap(43)
-									.addComponent(textField, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
+									.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
 								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
 									.addPreferredGap(ComponentPlacement.RELATED, 18, GroupLayout.PREFERRED_SIZE)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -108,7 +145,7 @@ public class Menu extends JFrame {
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+						.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel_1))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btnFuncionario, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)

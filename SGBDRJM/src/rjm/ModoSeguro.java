@@ -138,8 +138,16 @@ public class ModoSeguro extends JFrame {
                     		                            departamento, nivel, id);
                     statement.executeUpdate(gerenteQuery);
 
+                    txtNome.setText("");
+                    txtCPF.setText("");
+                    txtTelefone.setText("");
+                    txtData.setText("");
+                    txtID.setText("");
+                    txtDepartamento.setText("");
+                    txtNivel.setText("");
+                    
                     JOptionPane.showMessageDialog(null, "Gerente cadastrado com sucesso!");
-                
+                    
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(null, "Erro ao cadastrar gerente.");
@@ -147,13 +155,25 @@ public class ModoSeguro extends JFrame {
 			}
 		});
 		btnCadastrar.setFont(new Font("Tahoma", Font.BOLD, 15));
+		
+		JButton btnVoltar = new JButton("Voltar");
+		btnVoltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Menu menu = new Menu();
+				menu.setVisible(true);
+				dispose();
+			}
+		});
+		btnVoltar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(116)
+							.addContainerGap()
+							.addComponent(btnVoltar, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
+							.addGap(18)
 							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 182, GroupLayout.PREFERRED_SIZE))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
@@ -183,8 +203,11 @@ public class ModoSeguro extends JFrame {
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE))
+						.addComponent(btnVoltar))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()

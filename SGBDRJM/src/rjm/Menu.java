@@ -68,6 +68,36 @@ public class Menu extends JFrame {
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JButton btnFuncionario = new JButton("Entrar como funcionário");
+		btnFuncionario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try (Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mydb", "root", "senha");) {
+					
+					String idString = txtID.getText();
+					
+					if (idString.equals("")) {
+						idString = "0";
+					}
+					
+					Integer id = Integer.parseInt(idString);
+					
+					String checkIDQuery = "SELECT CodFuncionário FROM Funcionário WHERE CodFuncionário = " + id;
+					
+					Statement statement = connection.createStatement();
+					ResultSet resultSet = statement.executeQuery(checkIDQuery);
+					
+					if (resultSet.next()) {
+						ModoFuncionario mf = new ModoFuncionario();
+						mf.setVisible(true);
+					    dispose();
+					} else {
+						JOptionPane.showMessageDialog(btnFuncionario, "ID inválido.");
+					}
+					
+				} catch (SQLException ex) {
+		            ex.printStackTrace();
+		        }
+			}
+		});
 		btnFuncionario.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		JButton btnGerente = new JButton("Entrar como gerente");

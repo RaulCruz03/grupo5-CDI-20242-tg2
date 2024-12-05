@@ -1,4 +1,4 @@
-Coisas para fazer:
+# 📝 Todo List App
 1 - Gerar o diagrama na ferramenta case do MySQL/PostGree - [x]
 2 - Traduzir para SQL - [x]
 3 - Fazer a Interface Gráfica com alguma linguagem a escolher (java) - [ ]

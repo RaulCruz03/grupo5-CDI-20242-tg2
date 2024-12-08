@@ -4,3 +4,5 @@
 3 - Fazer a Interface Gráfica com alguma linguagem a escolher (java) - [ ]
 4 - Implementar views para o SGBD - [ ]
 5 - Fazer um relatório usando o OverLeaf/Docs - [ ]
+6 - Fazer um frame para cada entidade com tabela mostrando os dados, deletar, inserir, e atualizar - [ ]
+

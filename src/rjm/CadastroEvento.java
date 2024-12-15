@@ -111,6 +111,24 @@ public class CadastroEvento extends JFrame {
         });
         contentPane.add(btnExcluir);
 
+        // Botão de Atualizar
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setBounds(390, 230, 100, 25);
+        btnAtualizar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int codEvento = (int) tableModel.getValueAt(selectedRow, 0);
+                String data = textFieldData.getText();
+                String descricao = textFieldDescricao.getText();
+                int numeroParticipantes = Integer.parseInt(textFieldNumeroParticipantes.getText());
+                int codOrganizador = Integer.parseInt(textFieldCodOrganizador.getText());
+                updateEvento(codEvento, data, descricao, numeroParticipantes, codOrganizador);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um evento para atualizar.");
+            }
+        });
+        contentPane.add(btnAtualizar);
+
         loadEventoData();
     }
 
@@ -170,6 +188,25 @@ public class CadastroEvento extends JFrame {
                 stmt.setInt(1, codEvento);
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Evento excluído com sucesso!");
+                loadEventoData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateEvento(int codEvento, String data, String descricao, int numeroParticipantes, int codOrganizador) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String updateEvento = "UPDATE Evento SET Data = ?, Descrição = ?, `N° de Participantes` = ?, codOrganizador = ? WHERE codEvento = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateEvento)) {
+                stmt.setString(1, data);
+                stmt.setString(2, descricao);
+                stmt.setInt(3, numeroParticipantes);
+                stmt.setInt(4, codOrganizador);
+                stmt.setInt(5, codEvento);
+                stmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(null, "Evento atualizado com sucesso!");
                 loadEventoData();
             }
         } catch (SQLException e) {

@@ -72,8 +72,8 @@ public class CadastroCliente extends JFrame {
         btnCadastrar.addActionListener(e -> {
             String nome = textFieldNome.getText();
             String telefone = textFieldTelefone.getText();
-            int numeroFidelidade = Integer.parseInt(textFieldNumeroFidelidade.getText());
-            addCliente(nome, telefone, numeroFidelidade);
+            String numeroFidelidadeStr = textFieldNumeroFidelidade.getText();
+            addCliente(nome, telefone, numeroFidelidadeStr);
         });
         contentPane.add(btnCadastrar);
 
@@ -101,10 +101,42 @@ public class CadastroCliente extends JFrame {
         });
         contentPane.add(btnExcluir);
 
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setBounds(390, 190, 100, 25);
+        btnAtualizar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int codCliente = (int) tableModel.getValueAt(selectedRow, 0);
+                String nome = (String) tableModel.getValueAt(selectedRow, 1);
+                String telefone = (String) tableModel.getValueAt(selectedRow, 2);
+                String numeroFidelidadeStr = (String) tableModel.getValueAt(selectedRow, 3);
+
+                // Atualiza os campos
+                textFieldNome.setText(nome);
+                textFieldTelefone.setText(telefone);
+                textFieldNumeroFidelidade.setText(numeroFidelidadeStr);
+
+                // Atualiza o cliente no banco de dados
+                updateCliente(codCliente, nome, telefone, numeroFidelidadeStr);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um cliente para atualizar.");
+            }
+        });
+        contentPane.add(btnAtualizar);
+
         loadClienteData();
     }
 
-    private void addCliente(String nome, String telefone, int numeroFidelidade) {
+    private void addCliente(String nome, String telefone, String numeroFidelidadeStr) {
+        // Valida o número de fidelidade
+        int numeroFidelidade;
+        try {
+            numeroFidelidade = Integer.parseInt(numeroFidelidadeStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O número de fidelidade deve ser um número inteiro.");
+            return; // Interrompe a execução se a entrada for inválida
+        }
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             conn.setAutoCommit(false);
 
@@ -159,6 +191,32 @@ public class CadastroCliente extends JFrame {
                 stmt.setInt(1, codCliente);
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Cliente excluído com sucesso!");
+                loadClienteData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCliente(int codCliente, String nome, String telefone, String numeroFidelidadeStr) {
+        // Valida o número de fidelidade
+        int numeroFidelidade;
+        try {
+            numeroFidelidade = Integer.parseInt(numeroFidelidadeStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "O número de fidelidade deve ser um número inteiro.");
+            return; // Interrompe a execução se a entrada for inválida
+        }
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String updateCliente = "UPDATE Cliente SET Nome = ?, Telefone = ?, `Número de Fidelidade` = ? WHERE CodCliente = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateCliente)) {
+                stmt.setString(1, nome);
+                stmt.setString(2, telefone);
+                stmt.setInt(3, numeroFidelidade);
+                stmt.setInt(4, codCliente);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Cliente atualizado com sucesso!");
                 loadClienteData();
             }
         } catch (SQLException e) {

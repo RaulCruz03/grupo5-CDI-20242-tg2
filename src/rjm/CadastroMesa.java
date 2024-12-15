@@ -32,6 +32,9 @@ public class CadastroMesa extends JFrame {
     private JTable table;
     private DefaultTableModel tableModel;
 
+    private boolean isUpdate = false;  // Flag to check if we are updating an existing mesa
+    private int currentMesaNumero = -1; // Variable to hold the current mesa's number for update
+
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -105,6 +108,10 @@ public class CadastroMesa extends JFrame {
         btnExcluirMesa.setBounds(131, 220, 144, 21);
         contentPane.add(btnExcluirMesa);
         
+        JButton btnAtualizarMesa = new JButton("Atualizar Mesa");
+        btnAtualizarMesa.setBounds(131, 250, 144, 21);  // Adicionando o novo botão
+        contentPane.add(btnAtualizarMesa);
+        
         JLabel lblNewLabel = new JLabel("Número da Mesa");
         lblNewLabel.setBounds(66, 326, 95, 13);
         contentPane.add(lblNewLabel);
@@ -119,27 +126,64 @@ public class CadastroMesa extends JFrame {
         
         // Action for the "Cadastrar" button
         btnCadastrar.addActionListener(e -> {
-            // Get values from text fields
-            int numero = Integer.parseInt(textFieldNumero.getText());
-            int capacidade = Integer.parseInt(textFieldCapacidade.getText());
-            String status = textFieldStatus.getText();
+            try {
+                int numero = Integer.parseInt(textFieldNumero.getText());
+                int capacidade = Integer.parseInt(textFieldCapacidade.getText());
+                String status = textFieldStatus.getText();
 
-            // Call method to insert the table data into the database
-            addMesa(numero, capacidade, status);
+                if (isUpdate) {
+                    // Update the existing mesa
+                    updateMesa(currentMesaNumero, numero, capacidade, status);
+                    btnCadastrar.setText("Cadastrar"); // Reset the button text
+                    isUpdate = false; // Reset the update flag
+                } else {
+                    // Add a new mesa
+                    addMesa(numero, capacidade, status);
+                }
+
+                // Clear text fields after action
+                textFieldNumero.setText("");
+                textFieldCapacidade.setText("");
+                textFieldStatus.setText("");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Por favor, insira números válidos para número e capacidade.");
+            }
         });
 
         // Action for the "Excluir Mesa" button
         btnExcluirMesa.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                // Get table number from the selected row
-                int numero = (int) tableModel.getValueAt(selectedRow, 0); // Get the "Número" from the first column
+                int numero = (int) tableModel.getValueAt(selectedRow, 0);
                 int confirm = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja excluir esta mesa?", "Excluir", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    deleteMesa(numero); // Call method to delete the table
+                    deleteMesa(numero);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Selecione uma mesa para excluir.");
+            }
+        });
+
+        // Action for the "Atualizar Mesa" button
+        btnAtualizarMesa.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                // Get selected row data
+                int numero = (int) tableModel.getValueAt(selectedRow, 0);
+                String status = (String) tableModel.getValueAt(selectedRow, 2);
+                int capacidade = (int) tableModel.getValueAt(selectedRow, 1);
+
+                // Set the data into text fields for editing
+                textFieldNumero.setText(String.valueOf(numero));
+                textFieldCapacidade.setText(String.valueOf(capacidade));
+                textFieldStatus.setText(status);
+
+                // Set the current mesa's number for updating
+                currentMesaNumero = numero;
+                isUpdate = true; // Enable update flag
+                btnCadastrar.setText("Salvar Alterações"); // Change button text to "Save Changes"
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione uma mesa para atualizar.");
             }
         });
 
@@ -155,12 +199,8 @@ public class CadastroMesa extends JFrame {
                 stmt.setInt(1, numero);
                 stmt.setInt(2, capacidade);
                 stmt.setString(3, status);
-
-                // Execute the insert query
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Mesa cadastrada com sucesso!");
-
-                // Refresh the table data
                 loadMesaData();
             }
         } catch (SQLException e) {
@@ -170,28 +210,16 @@ public class CadastroMesa extends JFrame {
     }
 
     private void loadMesaData() {
-        // Clear the existing data in the table
         tableModel.setRowCount(0);
-
-        // Load the table data from the database
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "SELECT Número, Capacidade, Status FROM Mesa";
             
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet rs = stmt.executeQuery();
-
-                // Check if there are any results
-                if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(null, "Nenhuma mesa encontrada.");
-                }
-
-                // Add the rows from the result set into the table model
                 while (rs.next()) {
                     int numero = rs.getInt("Número");
                     int capacidade = rs.getInt("Capacidade");
                     String status = rs.getString("Status");
-
-                    // Add each row to the table
                     tableModel.addRow(new Object[]{numero, capacidade, status});
                 }
             }
@@ -204,23 +232,37 @@ public class CadastroMesa extends JFrame {
     private void deleteMesa(int numero) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "DELETE FROM Mesa WHERE Número = ?";
-            
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, numero);
-                
                 int rowsAffected = stmt.executeUpdate();
                 if (rowsAffected > 0) {
                     JOptionPane.showMessageDialog(null, "Mesa excluída com sucesso!");
                 } else {
                     JOptionPane.showMessageDialog(null, "Mesa não encontrada.");
                 }
-
-                // Refresh the table data
                 loadMesaData();
             }
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro ao excluir mesa: " + e.getMessage());
+        }
+    }
+
+    private void updateMesa(int oldNumero, int newNumero, int newCapacidade, String newStatus) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "UPDATE Mesa SET Número = ?, Capacidade = ?, Status = ? WHERE Número = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, newNumero);
+                stmt.setInt(2, newCapacidade);
+                stmt.setString(3, newStatus);
+                stmt.setInt(4, oldNumero);
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Mesa atualizada com sucesso!");
+                loadMesaData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar mesa: " + e.getMessage());
         }
     }
 }

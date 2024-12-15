@@ -44,6 +44,49 @@ public class CadastroAtendente extends JFrame {
         lblTitulo.setBounds(30, 20, 300, 30);
         contentPane.add(lblTitulo);
 
+        JButton btnCadastrar = new JButton("Cadastrar");
+        btnCadastrar.setBounds(150, 310, 100, 25);
+        btnCadastrar.addActionListener(e -> {
+            String nome = textFieldNome.getText();
+            String cpf = textFieldCpf.getText();
+            String telefone = textFieldTelefone.getText();
+            String dataContratacao = textFieldDataContratacao.getText();
+            String turnoTrabalho = textFieldTurnoTrabalho.getText();
+            addAtendente(nome, cpf, telefone, dataContratacao, turnoTrabalho);
+        });
+        contentPane.add(btnCadastrar);
+
+        JButton btnExcluir = new JButton("Excluir");
+        btnExcluir.setBounds(270, 310, 100, 25);
+        btnExcluir.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                int idAtendente = (int) tableModel.getValueAt(selectedRow, 0);
+                deleteAtendente(idAtendente);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um atendente para excluir.");
+            }
+        });
+        contentPane.add(btnExcluir);
+
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setBounds(390, 310, 100, 25);
+        btnAtualizar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                updateAtendente(selectedRow);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um atendente para atualizar.");
+            }
+        });
+        contentPane.add(btnAtualizar);
+
+        setupFormFields();
+        setupTable();
+        loadAtendenteData();
+    }
+
+    private void setupFormFields() {
         JLabel lblNome = new JLabel("Nome:");
         lblNome.setBounds(30, 70, 100, 25);
         contentPane.add(lblNome);
@@ -83,29 +126,9 @@ public class CadastroAtendente extends JFrame {
         textFieldTurnoTrabalho = new JTextField();
         textFieldTurnoTrabalho.setBounds(150, 230, 200, 25);
         contentPane.add(textFieldTurnoTrabalho);
+    }
 
-        JLabel lblTipoFuncionario = new JLabel("Tipo de Funcionário:");
-        lblTipoFuncionario.setBounds(30, 270, 150, 25);
-        contentPane.add(lblTipoFuncionario);
-
-        JTextField textFieldTipoFuncionario = new JTextField();
-        textFieldTipoFuncionario.setBounds(150, 270, 200, 25);
-        textFieldTipoFuncionario.setText("Atendente");
-        textFieldTipoFuncionario.setEditable(false);
-        contentPane.add(textFieldTipoFuncionario);
-
-        JButton btnCadastrar = new JButton("Cadastrar");
-        btnCadastrar.setBounds(150, 310, 100, 25);
-        btnCadastrar.addActionListener(e -> {
-            String nome = textFieldNome.getText();
-            String cpf = textFieldCpf.getText();
-            String telefone = textFieldTelefone.getText();
-            String dataContratacao = textFieldDataContratacao.getText();
-            String turnoTrabalho = textFieldTurnoTrabalho.getText();
-            addAtendente(nome, cpf, telefone, dataContratacao, turnoTrabalho);
-        });
-        contentPane.add(btnCadastrar);
-
+    private void setupTable() {
         tableModel = new DefaultTableModel();
         tableModel.addColumn("IdAtendente");
         tableModel.addColumn("Nome");
@@ -118,21 +141,6 @@ public class CadastroAtendente extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(30, 350, 720, 200);
         contentPane.add(scrollPane);
-
-        JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBounds(270, 310, 100, 25);
-        btnExcluir.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) {
-                int idAtendente = (int) tableModel.getValueAt(selectedRow, 0);
-                deleteAtendente(idAtendente);
-            } else {
-                JOptionPane.showMessageDialog(null, "Selecione um atendente para excluir.");
-            }
-        });
-        contentPane.add(btnExcluir);
-
-        loadAtendenteData();
     }
 
     private void addAtendente(String nome, String cpf, String telefone, String dataContratacao, String turnoTrabalho) {
@@ -140,7 +148,6 @@ public class CadastroAtendente extends JFrame {
             conn.setAutoCommit(false);
 
             int idFuncionario = -1;
-
             String insertFuncionario = "INSERT INTO Funcionário (Nome, CPF, Telefone, DataContratação, TipodeFuncionário) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement stmtFuncionario = conn.prepareStatement(insertFuncionario, Statement.RETURN_GENERATED_KEYS)) {
                 stmtFuncionario.setString(1, nome);
@@ -171,6 +178,36 @@ public class CadastroAtendente extends JFrame {
         }
     }
 
+    private void updateAtendente(int selectedRow) {
+        int idAtendente = (int) tableModel.getValueAt(selectedRow, 0);
+        String nome = (String) tableModel.getValueAt(selectedRow, 1);
+        String cpf = (String) tableModel.getValueAt(selectedRow, 2);
+        String telefone = (String) tableModel.getValueAt(selectedRow, 3);
+        String dataContratacao = (String) tableModel.getValueAt(selectedRow, 4);
+        String turnoTrabalho = (String) tableModel.getValueAt(selectedRow, 5);
+
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String updateQuery = "UPDATE Funcionário f JOIN Atendente a ON f.CodFuncionário = a.IdAtendente " +
+                                 "SET f.Nome = ?, f.CPF = ?, f.Telefone = ?, f.DataContratação = ?, a.`Turno de Trabalho` = ? " +
+                                 "WHERE a.IdAtendente = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(updateQuery)) {
+                stmt.setString(1, nome);
+                stmt.setString(2, cpf);
+                stmt.setString(3, telefone);
+                stmt.setDate(4, java.sql.Date.valueOf(dataContratacao));
+                stmt.setString(5, turnoTrabalho);
+                stmt.setInt(6, idAtendente);
+
+                stmt.executeUpdate();
+                JOptionPane.showMessageDialog(null, "Atendente atualizado com sucesso!");
+                loadAtendenteData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
+        }
+    }
+
     private void loadAtendenteData() {
         tableModel.setRowCount(0);
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
@@ -182,7 +219,7 @@ public class CadastroAtendente extends JFrame {
                 while (rs.next()) {
                     tableModel.addRow(new Object[]{
                         rs.getInt("IdAtendente"), rs.getString("Nome"), rs.getString("CPF"),
-                        rs.getString("Telefone"), rs.getString("DataContratação"), 
+                        rs.getString("Telefone"), rs.getString("DataContratação"),
                         rs.getString("Turno de Trabalho")
                     });
                 }

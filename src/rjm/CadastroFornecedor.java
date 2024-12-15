@@ -62,8 +62,14 @@ public class CadastroFornecedor extends JFrame {
         JButton btnCadastrar = new JButton("Cadastrar");
         btnCadastrar.setBounds(150, 150, 100, 25);
         btnCadastrar.addActionListener(e -> {
-            String nome = textFieldNome.getText();
-            String telefone = textFieldTelefone.getText();
+            String nome = textFieldNome.getText().trim();
+            String telefone = textFieldTelefone.getText().trim();
+
+            if (nome.isEmpty() || telefone.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos.");
+                return;
+            }
+
             addFornecedor(nome, telefone);
         });
         contentPane.add(btnCadastrar);
@@ -78,18 +84,47 @@ public class CadastroFornecedor extends JFrame {
         scrollPane.setBounds(30, 200, 720, 200);
         contentPane.add(scrollPane);
 
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                int selectedRow = table.getSelectedRow();
+                textFieldNome.setText(tableModel.getValueAt(selectedRow, 1).toString());
+                textFieldTelefone.setText(tableModel.getValueAt(selectedRow, 2).toString());
+            }
+        });
+
         JButton btnExcluir = new JButton("Excluir");
         btnExcluir.setBounds(270, 150, 100, 25);
         btnExcluir.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                int codFornecedor = (int) tableModel.getValueAt(selectedRow, 0);
+                int codFornecedor = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
                 deleteFornecedor(codFornecedor);
             } else {
                 JOptionPane.showMessageDialog(null, "Selecione um fornecedor para excluir.");
             }
         });
         contentPane.add(btnExcluir);
+
+        JButton btnAtualizar = new JButton("Atualizar");
+        btnAtualizar.setBounds(390, 150, 100, 25);
+        btnAtualizar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String nome = textFieldNome.getText().trim();
+                String telefone = textFieldTelefone.getText().trim();
+
+                if (nome.isEmpty() || telefone.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Por favor, preencha os campos Nome e Telefone.");
+                    return;
+                }
+
+                int codFornecedor = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+                updateFornecedor(codFornecedor, nome, telefone);
+            } else {
+                JOptionPane.showMessageDialog(null, "Selecione um fornecedor para atualizar.");
+            }
+        });
+        contentPane.add(btnAtualizar);
 
         loadFornecedorData();
     }
@@ -104,7 +139,6 @@ public class CadastroFornecedor extends JFrame {
                 stmt.setString(2, telefone);
                 stmt.executeUpdate();
 
-                // Após a inserção, obtém o CodFornecedor gerado
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
                     int codFornecedor = rs.getInt(1);
@@ -116,7 +150,6 @@ public class CadastroFornecedor extends JFrame {
             }
 
             conn.commit();
-
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Erro: " + e.getMessage());
@@ -130,7 +163,7 @@ public class CadastroFornecedor extends JFrame {
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    tableModel.addRow(new Object[]{
+                    tableModel.addRow(new Object[] {
                         rs.getInt("CodFornecedor"), rs.getString("Nome"), rs.getString("Telefone")
                     });
                 }
@@ -153,4 +186,32 @@ public class CadastroFornecedor extends JFrame {
             e.printStackTrace();
         }
     }
+
+    private void updateFornecedor(int codFornecedor, String nome, String telefone) {
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "UPDATE Fornecedor SET Nome = ?, Telefone = ? WHERE CodFornecedor = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setString(1, nome);
+                stmt.setString(2, telefone);
+                stmt.setInt(3, codFornecedor);
+
+                int rowsUpdated = stmt.executeUpdate();
+                if (rowsUpdated > 0) {
+                    JOptionPane.showMessageDialog(null, "Fornecedor atualizado com sucesso!");
+
+                    textFieldNome.setText("");
+                    textFieldTelefone.setText("");
+                    table.clearSelection();
+                } else {
+                    JOptionPane.showMessageDialog(null, "Fornecedor não encontrado para atualização.");
+                }
+
+                loadFornecedorData();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar fornecedor: " + e.getMessage());
+        }
+    }
 }
+

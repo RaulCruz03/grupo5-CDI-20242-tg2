@@ -14,7 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -23,28 +23,22 @@ public class CadastroFuncionario extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JTextField textField;
-    private JTextField textField_1;
-    private JTextField textField_2;
-    private JTextField textField_3;
-    private JTextField textField_4;
-    
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/mydb";  // Altere para o seu banco de dados
-    private static final String DB_USER = "root";  // Seu usuário do banco de dados
-    private static final String DB_PASSWORD = "senha";  // Sua senha do banco de dados
-    
+    private JTextField textField, textField_1, textField_2, textField_3, textField_4;
+
+    private static final String DB_URL = "jdbc:mariadb://localhost:3306/mydb"; // Alterar conforme seu BD
+    private static final String DB_USER = "root";
+    private static final String DB_PASSWORD = "senha";
+
     private JTable table;
     private DefaultTableModel tableModel;
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    CadastroFuncionario frame = new CadastroFuncionario();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        EventQueue.invokeLater(() -> {
+            try {
+                CadastroFuncionario frame = new CadastroFuncionario();
+                frame.setVisible(true);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
     }
@@ -56,206 +50,189 @@ public class CadastroFuncionario extends JFrame {
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         contentPane.setLayout(null);
-        
+
         JLabel lblNewLabel = new JLabel("Funcionário Geral");
         lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
         lblNewLabel.setBounds(66, 24, 350, 54);
         contentPane.add(lblNewLabel);
-        
+
+        // Labels e TextFields
+        addInputFields();
+
+        // Botões
+        JButton btnCadastrar = new JButton("Cadastrar");
+        btnCadastrar.setBounds(131, 258, 100, 21);
+        contentPane.add(btnCadastrar);
+
+        JButton btnExcluir = new JButton("Excluir Funcionário");
+        btnExcluir.setBounds(240, 258, 150, 21);
+        contentPane.add(btnExcluir);
+
+        JButton btnAtualizar = new JButton("Atualizar Funcionário");
+        btnAtualizar.setBounds(400, 258, 170, 21);
+        contentPane.add(btnAtualizar);
+
+        // Tabela
+        setupTable();
+
+        // Ações dos botões
+        btnCadastrar.addActionListener(e -> addFuncionario());
+        btnExcluir.addActionListener(e -> deleteFuncionario());
+        btnAtualizar.addActionListener(e -> updateFuncionario());
+
+        // Carregar os dados da tabela ao iniciar
+        loadFuncionarioData();
+    }
+
+    private void addInputFields() {
+        JLabel lblNome = new JLabel("Nome");
+        lblNome.setBounds(76, 91, 45, 13);
+        contentPane.add(lblNome);
         textField = new JTextField();
         textField.setBounds(131, 88, 241, 19);
         contentPane.add(textField);
-        textField.setColumns(10);
-        
-        JLabel lblNewLabel_1 = new JLabel("Nome");
-        lblNewLabel_1.setBounds(76, 91, 45, 13);
-        contentPane.add(lblNewLabel_1);
-        
-        JLabel lblNewLabel_2 = new JLabel("CPF");
-        lblNewLabel_2.setBounds(76, 124, 45, 13);
-        contentPane.add(lblNewLabel_2);
-        
+
+        JLabel lblCpf = new JLabel("CPF");
+        lblCpf.setBounds(76, 124, 45, 13);
+        contentPane.add(lblCpf);
         textField_1 = new JTextField();
         textField_1.setBounds(131, 121, 155, 19);
         contentPane.add(textField_1);
-        textField_1.setColumns(10);
-        
-        JLabel lblNewLabel_3 = new JLabel("Telefone");
-        lblNewLabel_3.setBounds(66, 157, 55, 13);
-        contentPane.add(lblNewLabel_3);
-        
+
+        JLabel lblTelefone = new JLabel("Telefone");
+        lblTelefone.setBounds(66, 157, 55, 13);
+        contentPane.add(lblTelefone);
         textField_2 = new JTextField();
         textField_2.setBounds(131, 154, 155, 19);
         contentPane.add(textField_2);
-        textField_2.setColumns(10);
-        
+
+        JLabel lblData = new JLabel("Data de Contratação (AAAA-MM-DD)");
+        lblData.setBounds(24, 186, 200, 13);
+        contentPane.add(lblData);
         textField_3 = new JTextField();
-        textField_3.setBounds(151, 183, 106, 19);
+        textField_3.setBounds(231, 183, 141, 19);
         contentPane.add(textField_3);
-        textField_3.setColumns(10);
-        
-        JLabel lblDataDeContratao = new JLabel("Data de Contratação");
-        lblDataDeContratao.setBounds(24, 186, 121, 13);
-        contentPane.add(lblDataDeContratao);
-        
-        JLabel lblNewLabel_4 = new JLabel("Tipo de Funcionário");
-        lblNewLabel_4.setBounds(10, 215, 135, 13);
-        contentPane.add(lblNewLabel_4);
-        
+
+        JLabel lblTipo = new JLabel("Tipo de Funcionário");
+        lblTipo.setBounds(10, 215, 135, 13);
+        contentPane.add(lblTipo);
         textField_4 = new JTextField();
         textField_4.setBounds(151, 212, 184, 19);
         contentPane.add(textField_4);
-        textField_4.setColumns(10);
-        
-        JButton btnNewButton = new JButton("Cadastre");
-        btnNewButton.setBounds(131, 258, 85, 21);
-        contentPane.add(btnNewButton);
-        
+    }
+
+    private void setupTable() {
         tableModel = new DefaultTableModel();
-        tableModel.addColumn("CodFuncionário"); 
+        tableModel.addColumn("CodFuncionário");
         tableModel.addColumn("Nome");
         tableModel.addColumn("CPF");
         tableModel.addColumn("Telefone");
         tableModel.addColumn("Data Contratação");
         tableModel.addColumn("Tipo Funcionário");
-        
+
         table = new JTable(tableModel);
-        table.setCellSelectionEnabled(true);
-        table.setColumnSelectionAllowed(true);
         table.setBounds(66, 349, 853, 381);
         contentPane.add(table);
-        
-        JButton btnExcluirFuncionario = new JButton("Excluir Funcionário");
-        btnExcluirFuncionario.setBounds(131, 289, 144, 21);
-        contentPane.add(btnExcluirFuncionario);
-        
-        JLabel lblNewLabel_5 = new JLabel("Código do Funcionário");
-        lblNewLabel_5.setBounds(66, 332, 135, 13);
-        contentPane.add(lblNewLabel_5);
-        
-        JLabel lblNewLabel_6 = new JLabel("CPF");
-        lblNewLabel_6.setBounds(362, 332, 45, 13);
-        contentPane.add(lblNewLabel_6);
-        
-        JLabel lblNewLabel_7 = new JLabel("Telefone");
-        lblNewLabel_7.setBounds(498, 332, 70, 13);
-        contentPane.add(lblNewLabel_7);
-        
-        JLabel lblNewLabel_8 = new JLabel("Data de Contratação");
-        lblNewLabel_8.setBounds(636, 332, 121, 13);
-        contentPane.add(lblNewLabel_8);
-        
-        JLabel lblNewLabel_9 = new JLabel("Tipo de Funcionário");
-        lblNewLabel_9.setBounds(778, 332, 141, 13);
-        contentPane.add(lblNewLabel_9);
-        
-        JLabel lblNewLabel_10 = new JLabel("Nome");
-        lblNewLabel_10.setBounds(211, 332, 45, 13);
-        contentPane.add(lblNewLabel_10);
-
-        // Ação para o botão "Cadastre"
-        btnNewButton.addActionListener(e -> {
-            String nome = textField.getText();
-            String cpf = textField_1.getText();
-            String telefone = textField_2.getText();
-            String dataContratacao = textField_3.getText();
-            String tipoFuncionario = textField_4.getText();
-
-            addFuncionario(nome, cpf, telefone, dataContratacao, tipoFuncionario);
-        });
-
-        // Ação para o botão "Excluir Funcionário"
-        btnExcluirFuncionario.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) {
-                int codFuncionario = (int) tableModel.getValueAt(selectedRow, 0);
-                int confirm = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja excluir este funcionário?", "Excluir", JOptionPane.YES_NO_OPTION);
-                if (confirm == JOptionPane.YES_OPTION) {
-                    deleteFuncionario(codFuncionario);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Selecione um funcionário para excluir.");
-            }
-        });
-
-        // Carregar os dados na tabela ao abrir o frame
-        loadFuncionarioData();
     }
 
-    private void addFuncionario(String nome, String cpf, String telefone, String dataContratacao, String tipoFuncionario) {
+    private void addFuncionario() {
+        String nome = textField.getText();
+        String cpf = textField_1.getText();
+        String telefone = textField_2.getText();
+        String dataContratacao = textField_3.getText();
+        String tipoFuncionario = textField_4.getText();
+
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             String query = "INSERT INTO Funcionário (Nome, CPF, Telefone, DataContratação, TipodeFuncionário) VALUES (?, ?, ?, ?, ?)";
-            
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setString(1, nome);
                 stmt.setString(2, cpf);
                 stmt.setString(3, telefone);
-                
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                java.sql.Date sqlDate = new java.sql.Date(sdf.parse(dataContratacao).getTime());
-                stmt.setDate(4, sqlDate);
-                
+                stmt.setDate(4, java.sql.Date.valueOf(dataContratacao));
                 stmt.setString(5, tipoFuncionario);
 
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
-                loadFuncionarioData(); // Atualiza a tabela
+                loadFuncionarioData();
             }
-        } catch (SQLException | ParseException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao cadastrar funcionário: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao cadastrar: " + e.getMessage());
+        }
+    }
+
+    private void deleteFuncionario() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int codFuncionario = (int) tableModel.getValueAt(selectedRow, 0);
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String query = "DELETE FROM Funcionário WHERE CodFuncionário = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                    stmt.setInt(1, codFuncionario);
+                    stmt.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Funcionário excluído!");
+                    loadFuncionarioData();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Erro ao excluir: " + e.getMessage());
+            }
+        }
+    }
+
+    private void updateFuncionario() {
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            int codFuncionario = (int) tableModel.getValueAt(selectedRow, 0);
+            String nome = (String) tableModel.getValueAt(selectedRow, 1);
+            String cpf = (String) tableModel.getValueAt(selectedRow, 2);
+            String telefone = (String) tableModel.getValueAt(selectedRow, 3);
+            String dataContratacao = (String) tableModel.getValueAt(selectedRow, 4);
+            String tipoFuncionario = (String) tableModel.getValueAt(selectedRow, 5);
+
+            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+                String query = "UPDATE Funcionário SET Nome = ?, CPF = ?, Telefone = ?, DataContratação = ?, TipodeFuncionário = ? WHERE CodFuncionário = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                    stmt.setString(1, nome);
+                    stmt.setString(2, cpf);
+                    stmt.setString(3, telefone);
+                    stmt.setDate(4, java.sql.Date.valueOf(dataContratacao));
+                    stmt.setString(5, tipoFuncionario);
+                    stmt.setInt(6, codFuncionario);
+
+                    stmt.executeUpdate();
+                    JOptionPane.showMessageDialog(null, "Funcionário atualizado!");
+                    loadFuncionarioData();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Erro ao atualizar: " + e.getMessage());
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Selecione um funcionário para atualizar.");
         }
     }
 
     private void loadFuncionarioData() {
-        tableModel.setRowCount(0); // Limpar os dados existentes na tabela
-
+        tableModel.setRowCount(0);
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT CodFuncionário, Nome, CPF, Telefone, DataContratação, TipodeFuncionário FROM Funcionário";
-            
+            String query = "SELECT * FROM Funcionário";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet rs = stmt.executeQuery();
-
-                if (!rs.isBeforeFirst()) {
-                    JOptionPane.showMessageDialog(null, "Nenhum funcionário encontrado.");
-                }
-
                 while (rs.next()) {
-                    int codFuncionario = rs.getInt("CodFuncionário");
-                    String nome = rs.getString("Nome");
-                    String cpf = rs.getString("CPF");
-                    String telefone = rs.getString("Telefone");
-                    String dataContratacao = rs.getString("DataContratação");
-                    String tipoFuncionario = rs.getString("TipodeFuncionário");
-
-                    tableModel.addRow(new Object[]{codFuncionario, nome, cpf, telefone, dataContratacao, tipoFuncionario});
+                    tableModel.addRow(new Object[] {
+                        rs.getInt("CodFuncionário"),
+                        rs.getString("Nome"),
+                        rs.getString("CPF"),
+                        rs.getString("Telefone"),
+                        rs.getString("DataContratação"),
+                        rs.getString("TipodeFuncionário")
+                    });
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao carregar dados de funcionários: " + e.getMessage());
-        }
-    }
-
-    private void deleteFuncionario(int codFuncionario) {
-        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "DELETE FROM Funcionário WHERE CodFuncionário = ?";
-            
-            try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, codFuncionario);
-                
-                int rowsAffected = stmt.executeUpdate();
-                if (rowsAffected > 0) {
-                    JOptionPane.showMessageDialog(null, "Funcionário excluído com sucesso!");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Funcionário não encontrado.");
-                }
-
-                loadFuncionarioData(); // Atualiza a tabela
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Erro ao excluir funcionário: " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Erro ao carregar dados: " + e.getMessage());
         }
     }
 }

@@ -89,6 +89,16 @@ public class Menu extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Menu de gerenciamento");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 28));
+		
+		JButton btnVerPedidos = new JButton("Ver Pedidos");
+		btnVerPedidos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Pedidos p = new Pedidos();
+				p.setVisible(true);
+				dispose();
+			}
+		});
+		btnVerPedidos.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -102,6 +112,10 @@ public class Menu extends JFrame {
 					.addGap(59)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 311, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap(61, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(86)
+					.addComponent(btnVerPedidos)
+					.addContainerGap(256, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -111,7 +125,9 @@ public class Menu extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnAbrir, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(177, Short.MAX_VALUE))
+					.addGap(18)
+					.addComponent(btnVerPedidos)
+					.addContainerGap(136, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

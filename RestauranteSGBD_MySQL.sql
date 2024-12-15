@@ -142,7 +142,7 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Pedido`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Pedido` (
-  `CodPedido` INT NOT NULL,
+  `CodPedido` INT NOT NULL AUTO_INCREMENT,
   `Data/Hora` VARCHAR(45) NOT NULL,
   `Status` VARCHAR(45) NOT NULL,
   `n°Mesa` INT NOT NULL,
@@ -298,6 +298,24 @@ SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
+CREATE VIEW pedidos AS
+SELECT 
+                    p.CodPedido,
+                    p.`Data/Hora` AS DataHora,
+                    p.Status,
+                    c.Nome AS Cliente,
+                    f.Nome AS Atendente,
+                    p.`n°Mesa` AS Mesa,
+                    GROUP_CONCAT(pr.Nome SEPARATOR ', ') AS Pratos
+                FROM Pedido p
+                INNER JOIN Cliente c ON p.CodCliente = c.CodCliente
+                INNER JOIN Atendente a ON p.CodAtendente = a.IdAtendente
+                INNER JOIN Funcionário f ON a.IdAtendente = f.CodFuncionário
+                INNER JOIN Item i ON p.CodPedido = i.CodPedido
+                INNER JOIN Prato pr ON i.CodPrato = pr.CodPrato
+                GROUP BY p.CodPedido, p.`Data/Hora`, p.Status, c.Nome, f.Nome, p.`n°Mesa`
+                ORDER BY p.CodPedido;
+
 INSERT INTO Funcionário (Nome, CPF, Telefone, DataContratação, TipodeFuncionário) VALUES
 ('João Silva', '12345678900', '21999999999', '2022-05-01', 'Atendente'),
 ('Maria Oliveira', '98765432100', '21988888888', '2021-11-15', 'Cozinheiro'),
@@ -402,4 +420,34 @@ INSERT INTO Mesa (Número, Capacidade, Status) VALUES
 (9, 4, 'Disponível'),
 (10, 6, 'Reservada');
 
+-- Entradas
+INSERT INTO `mydb`.`Prato` (CodPrato, `Tempo de Preparo`, Preço, Descrição, Nome) VALUES
+(1, '00:15:00', 18.00, 'Tomate, muçarela de búfala, manjericão e azeite balsâmico.', 'Salada Caprese'),
+(2, '00:20:00', 32.00, 'Seleção de queijos, embutidos e pães artesanais.', 'Tábua de Frios'),
+(3, '00:10:00', 25.00, 'Tradicional bolinho de bacalhau servido com limão.', 'Bolinho de Bacalhau (6 un.)'),
+(4, '00:25:00', 20.00, 'Sopa francesa gratinada com queijo parmesão.', 'Sopa de Cebola Gratinada'),
+
+-- Pratos Principais
+(5, '00:30:00', 48.00, 'Arroz arbóreo com camarão, vinho branco e especiarias.', 'Risoto de Camarão'),
+(6, '01:00:00', 55.00, 'Costela bovina assada lentamente, acompanhada de arroz e farofa.', 'Costela no Bafo'),
+(7, '00:40:00', 40.00, 'Tilápia servida com purê de batata e legumes salteados.', 'Tilápia Grelhada'),
+(8, '00:25:00', 35.00, 'Massa ao molho de gemas, queijo pecorino e bacon crocante.', 'Espaguete à Carbonara'),
+(9, '00:50:00', 38.00, 'Feijão preto com carnes, acompanhado de arroz, couve e farofa.', 'Feijoada Completa (Porção Individual)'),
+(10, '00:30:00', 30.00, 'Mix de legumes grelhados com quinoa e molho especial.', 'Vegetariano do Chef'),
+
+-- Bebidas
+(11, '00:00:00', 6.00, 'Coca-Cola, Guaraná, Sprite ou Pepsi.', 'Refrigerante (lata)'),
+(12, '00:00:00', 10.00, 'Sabores: laranja, abacaxi, manga ou limão.', 'Suco Natural'),
+(13, '00:00:00', 8.00, 'Água com Gás.', 'Chá Gelado'),
+(14, '00:00:00', 4.00, 'Água com gás.', 'Água com Gás'),
+(15, '00:00:00', 3.50, 'Água sem gás.', 'Água Sem Gás'),
+(16, '00:00:00', 18.00, 'Cerveja Artesanal.', 'Cerveja Artesanal'),
+(17, '00:00:00', 25.00, 'Vinho Tinto (Taça).', 'Vinho Tinto (Taça)'),
+
+-- Sobremesas
+(18, '00:15:00', 22.00, 'Cheesecake clássico com calda de frutas vermelhas.', 'Cheesecake de Frutas Vermelhas'),
+(19, '00:10:00', 25.00, 'Bolo quente de chocolate com sorvete de baunilha.', 'Petit Gateau'),
+(20, '00:20:00', 20.00, 'Massa crocante com recheio de limão e merengue.', 'Torta de Limão'),
+(21, '00:15:00', 18.00, 'Sobremesa cremosa com calda de maracujá.', 'Mousse de Maracujá'),
+(22, '00:10:00', 15.00, 'Sorvete com chantilly e calda de chocolate.', 'Taça de Sorvete Especial');
 

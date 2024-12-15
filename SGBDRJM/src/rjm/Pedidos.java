@@ -73,22 +73,7 @@ public class Pedidos extends JFrame {
         tableModelPedidos.setRowCount(0); // Limpa os dados existentes na tabela
 
         String query = """
-                SELECT 
-                    p.CodPedido,
-                    p.`Data/Hora` AS DataHora,
-                    p.Status,
-                    c.Nome AS Cliente,
-                    f.Nome AS Atendente,
-                    p.`n°Mesa` AS Mesa,
-                    GROUP_CONCAT(pr.Nome SEPARATOR ', ') AS Pratos
-                FROM Pedido p
-                INNER JOIN Cliente c ON p.CodCliente = c.CodCliente
-                INNER JOIN Atendente a ON p.CodAtendente = a.IdAtendente
-                INNER JOIN Funcionário f ON a.IdAtendente = f.CodFuncionário
-                INNER JOIN Item i ON p.CodPedido = i.CodPedido
-                INNER JOIN Prato pr ON i.CodPrato = pr.CodPrato
-                GROUP BY p.CodPedido, p.`Data/Hora`, p.Status, c.Nome, f.Nome, p.`n°Mesa`
-                ORDER BY p.CodPedido;
+                SELECT * FROM pedidos;
                 """;
 
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);

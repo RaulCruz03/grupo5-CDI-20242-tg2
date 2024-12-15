@@ -22,12 +22,12 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JComboBox;
 
 public class Menu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField txtID;
 
 	/**
 	 * Launch the application.
@@ -50,141 +50,147 @@ public class Menu extends JFrame {
 	 */
 	public Menu() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 457, 215);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		
-		txtID = new JTextField();
-		txtID.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		txtID.setColumns(10);
+		JComboBox<String> comboBox = new JComboBox<>();
+		comboBox.addItem("Selecione");
+        comboBox.addItem("Funcionário");
+        comboBox.addItem("Gerente");
+        comboBox.addItem("Cozinheiro");
+        comboBox.addItem("Atendente");
+        comboBox.addItem("Evento");
+        comboBox.addItem("Fornecedor");
+        comboBox.addItem("Ingrediente");
+        comboBox.addItem("Prato");
+        comboBox.addItem("Pedido");
+        comboBox.addItem("Cliente");
+        comboBox.addItem("Mesa");
+        comboBox.addItem("Item");
+        comboBox.addItem("Fornecimento");
+        comboBox.addItem("Funcionário/Evento");
+        
 		
-		JLabel lblNewLabel = new JLabel("Login");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-		
-		JLabel lblNewLabel_1 = new JLabel("Identificador:");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		
-		JButton btnFuncionario = new JButton("Entrar como funcionário");
-		btnFuncionario.addActionListener(new ActionListener() {
+		JButton btnAbrir = new JButton("Abrir tela");
+		btnAbrir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try (Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mydb", "root", "senha");) {
-					
-					String idString = txtID.getText();
-					
-					if (idString.equals("")) {
-						idString = "0";
-					}
-					
-					Integer id = Integer.parseInt(idString);
-					
-					String checkIDQuery = "SELECT CodFuncionário FROM Funcionário WHERE CodFuncionário = " + id;
-					
-					Statement statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery(checkIDQuery);
-					
-					if (resultSet.next()) {
-						ModoFuncionario mf = new ModoFuncionario();
-						mf.setVisible(true);
-					    dispose();
-					} else {
-						JOptionPane.showMessageDialog(btnFuncionario, "ID inválido.");
-					}
-					
-				} catch (SQLException ex) {
-		            ex.printStackTrace();
-		        }
+				String selectedFrame = (String) comboBox.getSelectedItem();
+				if (selectedFrame != null) {
+	                openFrame(selectedFrame);
+				}
 			}
 		});
-		btnFuncionario.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JButton btnGerente = new JButton("Entrar como gerente");
-		btnGerente.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try (Connection connection = DriverManager.getConnection("jdbc:mariadb://localhost:3306/mydb", "root", "senha");) {
-					
-					String idString = txtID.getText();
-					
-					if (idString.equals("")) {
-						idString = "0";
-					}
-					
-					Integer id = Integer.parseInt(idString);
-					
-					String checkIDQuery = "SELECT CodGerente FROM Gerente WHERE CodGerente = " + id;
-					
-					Statement statement = connection.createStatement();
-					ResultSet resultSet = statement.executeQuery(checkIDQuery);
-					
-					if (resultSet.next()) {
-						ModoGerente md = new ModoGerente();
-						md.setVisible(true);
-					    dispose();
-					} else {
-						JOptionPane.showMessageDialog(btnGerente, "ID inválido.");
-					}
-					
-			} catch (SQLException ex) {
-	            ex.printStackTrace();
-	        }
-				
-		}
-		});
-		btnGerente.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
-		JButton btnModoSeguro = new JButton("Entrar no modo seguro");
-		btnModoSeguro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(btnModoSeguro, "Entrando em modo seguro, por favor cadastre credenciais de gerência.");
-				ModoSeguro ms = new ModoSeguro();
-				ms.setVisible(true);
-				dispose();
-			}
-		});
-		btnModoSeguro.setFont(new Font("Tahoma", Font.BOLD, 15));
+
+		
+		JLabel lblNewLabel = new JLabel("Menu de gerenciamento");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 28));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(173)
-							.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(87)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lblNewLabel_1)
-									.addGap(43)
-									.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE))
-								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED, 18, GroupLayout.PREFERRED_SIZE)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(btnGerente, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnFuncionario)
-										.addComponent(btnModoSeguro, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
-									.addGap(6)))))
-					.addContainerGap(102, Short.MAX_VALUE))
+					.addGap(51)
+					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+					.addComponent(btnAbrir, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)
+					.addGap(45))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(59)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 311, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(61, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(txtID, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_1))
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnFuncionario, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnGerente, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-					.addComponent(btnModoSeguro, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-					.addGap(19))
+						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnAbrir, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(177, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	private void openFrame(String frameName) {
+	    switch (frameName) {
+	        case "Funcionário":
+	            CadastroFuncionario cf = new CadastroFuncionario();
+	            cf.setVisible(true); // Abre a tela de cadastro de funcionário
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Gerente":
+	            CadastroGerente cg = new CadastroGerente();
+	            cg.setVisible(true); // Abre a tela de cadastro de gerente
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Cozinheiro":
+	            CadastroCozinheiro cco = new CadastroCozinheiro();
+	            cco.setVisible(true); // Abre a tela de cadastro de cozinheiro
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Atendente":
+	            CadastroAtendente ca = new CadastroAtendente();
+	            ca.setVisible(true); // Abre a tela de cadastro de atendente
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Evento":
+	            CadastroEvento ce = new CadastroEvento();
+	            ce.setVisible(true); // Abre a tela de cadastro de evento
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Fornecedor":
+	            CadastroFornecedor cfz = new CadastroFornecedor();
+	            cfz.setVisible(true); // Abre a tela de cadastro de fornecedor
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Ingrediente":
+	            CadastroIngrediente ci = new CadastroIngrediente();
+	            ci.setVisible(true); // Abre a tela de cadastro de ingrediente
+	            dispose(); // Fecha a tela atual
+	            break;
+//	        case "Prato":
+//	            CadastroPrato cp = new CadastroPrato();
+//	            cp.setVisible(true); // Abre a tela de cadastro de prato
+//	            dispose(); // Fecha a tela atual
+//	            break;
+	        case "Pedido":
+	            CadastroPedido cpdo = new CadastroPedido();
+	            cpdo.setVisible(true); // Abre a tela de cadastro de pedido
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Cliente":
+	            CadastroCliente cc = new CadastroCliente();
+	            cc.setVisible(true); // Abre a tela de cadastro de cliente
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Mesa":
+	            CadastroMesa cm = new CadastroMesa();
+	            cm.setVisible(true); // Abre a tela de cadastro de mesa
+	            dispose(); // Fecha a tela atual
+	            break;
+//	        case "Item":
+//	            CadastroItem ci2 = new CadastroItem();
+//	            ci2.setVisible(true); // Abre a tela de cadastro de item
+//	            dispose(); // Fecha a tela atual
+//	            break;
+//	        case "Fornecimento":
+//	            CadastroFornecimento cf2 = new CadastroFornecimento();
+//	            cf2.setVisible(true); // Abre a tela de cadastro de fornecimento
+//	            dispose(); // Fecha a tela atual
+//	            break;
+//	        case "Funcionário/Evento":
+//	            CadastroFuncionarioEvento cfe = new CadastroFuncionarioEvento();
+//	            cfe.setVisible(true); // Abre a tela de cadastro de funcionário/evento
+//	            dispose(); // Fecha a tela atual
+//	            break;
+	        default:
+	            JOptionPane.showMessageDialog(this, "Selecione uma opção válida");
+	            break;
+	    }
 	}
 }

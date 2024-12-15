@@ -24,7 +24,7 @@ public class Tabela extends JFrame {
     private JTable table;
 
     // Database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/mydb";
+    private static final String DB_URL = "jdbc:mariadb://localhost:3306/mydb";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "senha";
 

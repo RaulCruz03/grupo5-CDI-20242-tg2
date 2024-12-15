@@ -2,6 +2,7 @@ package rjm;
 
 import java.awt.*;
 import java.sql.*;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -79,7 +80,7 @@ public class CadastroPedido extends JFrame {
 
         JButton btnAdicionarItem = new JButton("Adicionar Prato");
         btnAdicionarItem.setBounds(400, 220, 150, 25);
-        btnAdicionarItem.addActionListener(e -> adicionarPrato());
+        btnAdicionarItem.addActionListener(e -> adicionarPratoComComboBox());
         contentPane.add(btnAdicionarItem);
 
         JButton btnRemoverItem = new JButton("Remover Prato");
@@ -100,24 +101,46 @@ public class CadastroPedido extends JFrame {
         contentPane.add(btnCadastrarPedido);
     }
 
-    private void adicionarPrato() {
-        String codPrato = JOptionPane.showInputDialog(this, "Digite o código do prato:");
-        if (codPrato != null && !codPrato.trim().isEmpty()) {
-            try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-                String query = "SELECT Nome FROM Prato WHERE CodPrato = ?";
-                try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                    stmt.setInt(1, Integer.parseInt(codPrato));
-                    ResultSet rs = stmt.executeQuery();
-                    if (rs.next()) {
-                        String nomePrato = rs.getString("Nome");
-                        tableModelItens.addRow(new Object[] { codPrato, nomePrato });
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Prato não encontrado!");
-                    }
+    private void adicionarPratoComComboBox() {
+        ArrayList<String[]> pratos = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+            String query = "SELECT CodPrato, Nome FROM Prato";
+            try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query)) {
+                while (rs.next()) {
+                    String codPrato = rs.getString("CodPrato");
+                    String nomePrato = rs.getString("Nome");
+                    pratos.add(new String[] { codPrato, nomePrato });
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Erro ao buscar prato: " + e.getMessage());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Erro ao buscar pratos: " + e.getMessage());
+            return;
+        }
+
+        if (pratos.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhum prato cadastrado no banco de dados.");
+            return;
+        }
+
+        String[] opcoes = pratos.stream().map(prato -> prato[1]).toArray(String[]::new);
+
+        String pratoEscolhido = (String) JOptionPane.showInputDialog(
+            this,
+            "Selecione um prato:",
+            "Adicionar Prato",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opcoes,
+            opcoes[0]
+        );
+
+        if (pratoEscolhido != null) {
+            for (String[] prato : pratos) {
+                if (prato[1].equals(pratoEscolhido)) {
+                    tableModelItens.addRow(prato);
+                    break;
+                }
             }
         }
     }

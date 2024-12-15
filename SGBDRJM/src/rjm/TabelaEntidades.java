@@ -15,7 +15,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-public class Tabela_teste extends JFrame {
+public class TabelaEntidades extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
@@ -32,7 +32,7 @@ public class Tabela_teste extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                Tabela_teste frame = new Tabela_teste();
+                TabelaEntidades frame = new TabelaEntidades();
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -43,7 +43,7 @@ public class Tabela_teste extends JFrame {
     /**
      * Create the frame.
      */
-    public Tabela_teste() {
+    public TabelaEntidades() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 800, 600);
         contentPane = new JPanel();

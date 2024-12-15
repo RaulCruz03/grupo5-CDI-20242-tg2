@@ -1,0 +1,59 @@
+INSERT INTO Funcionario (Nome, CPF, Telefone, DataContratacao, TipoFuncionario) VALUES
+('João Silva', '123.456.789-00', '21999999999', '2022-05-01', 'Atendente'),
+('Maria Oliveira', '987.654.321-00', '21988888888', '2021-11-15', 'Cozinheiro'),
+('Carlos Souza', '111.222.333-44', '21977777777', '2020-01-20', 'Gerente'),
+('Fernanda Costa', '333.444.555-66', '21966666666', '2023-02-10', 'Atendente'),
+('Ricardo Lima', '555.666.777-88', '21955555555', '2021-07-05', 'Cozinheiro'),
+('Cláudia Mendes', '888.999.000-11', '21944444444', '2019-09-12', 'Gerente'),
+('Luís Rocha', '222.333.444-55', '21933333333', '2020-12-08', 'Atendente'),
+('Rafaela Braga', '444.555.666-77', '21922222222', '2023-06-18', 'Cozinheiro'),
+('Bruno Ferreira', '666.777.888-99', '21911111111', '2021-04-03', 'Gerente'),
+('Camila Silva', '777.888.999-00', '21900000000', '2022-11-25', 'Atendente');
+
+
+
+INSERT INTO Atendente (CodFuncionario, Turno) VALUES
+(1, 'Manhã'),
+(4, 'Tarde'),
+(7, 'Noite'),
+(10, 'Manhã');
+
+
+INSERT INTO Cozinheiro (CodFuncionario, Especializacao, Chefe) VALUES 
+(2, 'Massas', NULL),
+ (5, 'Carnes', 2), 
+(8, 'Sobremesas', 5);
+
+INSERT INTO Gerente (CodFuncionario, Departamento, NivelGestao) VALUES
+(3, 'Operacional', 'Pleno'),
+(6, 'Financeiro', 'Sênior'),
+(9, 'Recursos Humanos', 'Júnior');
+
+INSERT INTO Cliente (Nome, Telefone, NumeroFidelidade) VALUES
+('Ana Paula', '21966666666', 'F123456'),
+('Pedro Lima', '21955555555', 'F789101'),
+('Lucas Almeida', '21944444444', 'F456789'),
+('Mariana Torres', '21933333333', 'F987654'),
+('Felipe Martins', '21922222222', 'F654321'),
+('Juliana Gonçalves', '21911111111', 'F112233'),
+('Bruno Carvalho', '21900000000', 'F223344'),
+('Isabela Souza', '21999998888', 'F334455'),
+('Gabriel Castro', '21988887777', 'F445566'),
+('Letícia Pereira', '21977776666', 'F556677');
+
+
+
+
+
+INSERT INTO Mesa (Numero, Capacidade, Status) VALUES
+(1, 4, 'Disponível'),
+(2, 6, 'Ocupada'),
+(3, 2, 'Reservada'),
+(4, 8, 'Disponível'),
+(5, 4, 'Ocupada'),
+(6, 6, 'Reservada'),
+(7, 2, 'Disponível'),
+(8, 8, 'Ocupada'),
+(9, 4, 'Disponível'),
+(10, 6, 'Reservada');
+

@@ -1,6 +1,13 @@
 # 📝 Todo List App
-1 - Gerar o diagrama na ferramenta case do MySQL/PostGree - [x]
-2 - Traduzir para SQL - [x]
-3 - Fazer a Interface Gráfica com alguma linguagem a escolher (java) - [ ]
-4 - Implementar views para o SGBD - [ ]
-5 - Fazer um relatório usando o OverLeaf/Docs - [ ]
+
+RQ1: Deve ser possível inserir, atualizar e deletar dados de todas as entidades   [ ] no caminho
+RQ2: Deve ser possível listar os dados de todas as entidades   [X]
+RQ3: Deve ser possível somar, contar, calcular a média, máximo, mínimo de todas entidades   [X]
+RQ4: Implementar consultas SQL que utilizem junções para combinar dados de, pelo menos,
+duas tabelas relacionadas   [ ] 
+RQ5: Implementar consultas que combinem funções de agregação com a cláusula GROUP BY   [ ] 
+RQ6: Criar, pelo menos, duas visões (views) que consolidem informações úteis e
+frequentemente consultadas (utilize a criatividade dentro do seu problema)   [ ] 
+RQ7: Possuir interface gráfica (livre escolha ao grupo entre desktop, web ou mobile)   [X]
+RQ8: Não utilizar ORM (Object Relational Mapping)   [X]
+

@@ -1,6 +1,6 @@
 # 📝 Todo List App
 
-RQ1: Deve ser possível inserir, atualizar e deletar dados de todas as entidades   [ ] no caminho
+RQ1: Deve ser possível inserir, atualizar e deletar dados de todas as entidades   [X] 
 RQ2: Deve ser possível listar os dados de todas as entidades   [X]
 RQ3: Deve ser possível somar, contar, calcular a média, máximo, mínimo de todas entidades   [X]
 RQ4: Implementar consultas SQL que utilizem junções para combinar dados de, pelo menos,

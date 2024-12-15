@@ -29,7 +29,7 @@ public class CadastroFuncionario extends JFrame {
     private JTextField textField_3;
     private JTextField textField_4;
     
-    private static final String DB_URL = "jdbc:mariadb://localhost:3306/mydb?useUnicode=true&characterEncoding=UTF-8";  // Altere para o seu banco de dados
+    private static final String DB_URL = "jdbc:mariadb://localhost:3306/mydb";  // Altere para o seu banco de dados
     private static final String DB_USER = "root";  // Seu usuário do banco de dados
     private static final String DB_PASSWORD = "senha";  // Sua senha do banco de dados
     
@@ -54,7 +54,6 @@ public class CadastroFuncionario extends JFrame {
         setBounds(100, 100, 1298, 834);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
         setContentPane(contentPane);
         contentPane.setLayout(null);
         
@@ -113,7 +112,7 @@ public class CadastroFuncionario extends JFrame {
         contentPane.add(btnNewButton);
         
         tableModel = new DefaultTableModel();
-        tableModel.addColumn("CodFuncionário"); // Adicionando coluna CodFuncionário
+        tableModel.addColumn("CodFuncionário"); 
         tableModel.addColumn("Nome");
         tableModel.addColumn("CPF");
         tableModel.addColumn("Telefone");
@@ -153,36 +152,33 @@ public class CadastroFuncionario extends JFrame {
         JLabel lblNewLabel_10 = new JLabel("Nome");
         lblNewLabel_10.setBounds(211, 332, 45, 13);
         contentPane.add(lblNewLabel_10);
-        
-        // Action for the "Cadastre" button
+
+        // Ação para o botão "Cadastre"
         btnNewButton.addActionListener(e -> {
-            // Get the values from the text fields
             String nome = textField.getText();
             String cpf = textField_1.getText();
             String telefone = textField_2.getText();
             String dataContratacao = textField_3.getText();
             String tipoFuncionario = textField_4.getText();
 
-            // Call method to insert the employee into the database
             addFuncionario(nome, cpf, telefone, dataContratacao, tipoFuncionario);
         });
 
-        // Action for the "Excluir Funcionário" button
+        // Ação para o botão "Excluir Funcionário"
         btnExcluirFuncionario.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                // Get CodFuncionário from the selected row
-                int codFuncionario = (int) tableModel.getValueAt(selectedRow, 0); // Get CodFuncionario from the first column
+                int codFuncionario = (int) tableModel.getValueAt(selectedRow, 0);
                 int confirm = JOptionPane.showConfirmDialog(null, "Você tem certeza que deseja excluir este funcionário?", "Excluir", JOptionPane.YES_NO_OPTION);
                 if (confirm == JOptionPane.YES_OPTION) {
-                    deleteFuncionario(codFuncionario); // Call method to delete the employee
+                    deleteFuncionario(codFuncionario);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "Selecione um funcionário para excluir.");
             }
         });
 
-        // Load data into table when the frame is opened
+        // Carregar os dados na tabela ao abrir o frame
         loadFuncionarioData();
     }
 
@@ -195,19 +191,15 @@ public class CadastroFuncionario extends JFrame {
                 stmt.setString(2, cpf);
                 stmt.setString(3, telefone);
                 
-                // Convert the date of hiring to SQL format
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 java.sql.Date sqlDate = new java.sql.Date(sdf.parse(dataContratacao).getTime());
                 stmt.setDate(4, sqlDate);
                 
                 stmt.setString(5, tipoFuncionario);
 
-                // Execute the insert query
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(null, "Funcionário cadastrado com sucesso!");
-
-                // Refresh the table data
-                loadFuncionarioData();
+                loadFuncionarioData(); // Atualiza a tabela
             }
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
@@ -216,23 +208,18 @@ public class CadastroFuncionario extends JFrame {
     }
 
     private void loadFuncionarioData() {
-        // Clear the existing data in the table
-        tableModel.setRowCount(0);
+        tableModel.setRowCount(0); // Limpar os dados existentes na tabela
 
-        // Attempt to load the data from the database, excluding certain types
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT CodFuncionário, Nome, CPF, Telefone, DataContratação, TipodeFuncionário FROM Funcionário " +
-                           "WHERE TipodeFuncionário NOT IN ('Gerente', 'Cozinheiro', 'Atendente')";  // Filtra os tipos indesejados
+            String query = "SELECT CodFuncionário, Nome, CPF, Telefone, DataContratação, TipodeFuncionário FROM Funcionário";
             
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet rs = stmt.executeQuery();
 
-                // Check if there are any results
                 if (!rs.isBeforeFirst()) {
                     JOptionPane.showMessageDialog(null, "Nenhum funcionário encontrado.");
                 }
 
-                // Add the rows from the result set into the table model
                 while (rs.next()) {
                     int codFuncionario = rs.getInt("CodFuncionário");
                     String nome = rs.getString("Nome");
@@ -241,7 +228,6 @@ public class CadastroFuncionario extends JFrame {
                     String dataContratacao = rs.getString("DataContratação");
                     String tipoFuncionario = rs.getString("TipodeFuncionário");
 
-                    // Add each row to the table
                     tableModel.addRow(new Object[]{codFuncionario, nome, cpf, telefone, dataContratacao, tipoFuncionario});
                 }
             }
@@ -265,8 +251,7 @@ public class CadastroFuncionario extends JFrame {
                     JOptionPane.showMessageDialog(null, "Funcionário não encontrado.");
                 }
 
-                // Refresh the table data
-                loadFuncionarioData();
+                loadFuncionarioData(); // Atualiza a tabela
             }
         } catch (SQLException e) {
             e.printStackTrace();

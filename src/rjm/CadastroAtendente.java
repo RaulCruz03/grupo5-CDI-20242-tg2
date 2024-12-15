@@ -5,16 +5,14 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.awt.Font;
 
-public class CadastroCozinheiro extends JFrame {
+public class CadastroAtendente extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
     private JTextField textFieldNome, textFieldCpf, textFieldTelefone, textFieldDataContratacao;
-    private JTextField textFieldEspecializacao, textFieldCodChef;
+    private JTextField textFieldTurnoTrabalho;
     private JTable table;
     private DefaultTableModel tableModel;
 
@@ -25,7 +23,7 @@ public class CadastroCozinheiro extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                CadastroCozinheiro frame = new CadastroCozinheiro();
+                CadastroAtendente frame = new CadastroAtendente();
                 frame.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -33,7 +31,7 @@ public class CadastroCozinheiro extends JFrame {
         });
     }
 
-    public CadastroCozinheiro() {
+    public CadastroAtendente() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 800, 600);
         contentPane = new JPanel();
@@ -41,7 +39,7 @@ public class CadastroCozinheiro extends JFrame {
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        JLabel lblTitulo = new JLabel("Cadastro de Cozinheiro");
+        JLabel lblTitulo = new JLabel("Cadastro de Atendente");
         lblTitulo.setFont(new Font("Tahoma", Font.BOLD, 24));
         lblTitulo.setBounds(30, 20, 300, 30);
         contentPane.add(lblTitulo);
@@ -78,76 +76,66 @@ public class CadastroCozinheiro extends JFrame {
         textFieldDataContratacao.setBounds(150, 190, 200, 25);
         contentPane.add(textFieldDataContratacao);
 
-        JLabel lblEspecializacao = new JLabel("Especialização:");
-        lblEspecializacao.setBounds(30, 230, 100, 25);
-        contentPane.add(lblEspecializacao);
+        JLabel lblTurnoTrabalho = new JLabel("Turno de Trabalho:");
+        lblTurnoTrabalho.setBounds(30, 230, 150, 25);
+        contentPane.add(lblTurnoTrabalho);
 
-        textFieldEspecializacao = new JTextField();
-        textFieldEspecializacao.setBounds(150, 230, 200, 25);
-        contentPane.add(textFieldEspecializacao);
-
-        JLabel lblCodChef = new JLabel("Código do Chef:");
-        lblCodChef.setBounds(30, 270, 100, 25);
-        contentPane.add(lblCodChef);
-
-        textFieldCodChef = new JTextField();
-        textFieldCodChef.setBounds(150, 270, 200, 25);
-        contentPane.add(textFieldCodChef);
+        textFieldTurnoTrabalho = new JTextField();
+        textFieldTurnoTrabalho.setBounds(150, 230, 200, 25);
+        contentPane.add(textFieldTurnoTrabalho);
 
         JLabel lblTipoFuncionario = new JLabel("Tipo de Funcionário:");
-        lblTipoFuncionario.setBounds(30, 310, 150, 25);
+        lblTipoFuncionario.setBounds(30, 270, 150, 25);
         contentPane.add(lblTipoFuncionario);
 
         JTextField textFieldTipoFuncionario = new JTextField();
-        textFieldTipoFuncionario.setBounds(150, 310, 200, 25);
-        textFieldTipoFuncionario.setText("Cozinheiro");
+        textFieldTipoFuncionario.setBounds(150, 270, 200, 25);
+        textFieldTipoFuncionario.setText("Atendente");
         textFieldTipoFuncionario.setEditable(false);
         contentPane.add(textFieldTipoFuncionario);
 
         JButton btnCadastrar = new JButton("Cadastrar");
-        btnCadastrar.setBounds(150, 350, 100, 25);
+        btnCadastrar.setBounds(150, 310, 100, 25);
         btnCadastrar.addActionListener(e -> {
             String nome = textFieldNome.getText();
             String cpf = textFieldCpf.getText();
             String telefone = textFieldTelefone.getText();
             String dataContratacao = textFieldDataContratacao.getText();
-            String especializacao = textFieldEspecializacao.getText();
-            String codChef = textFieldCodChef.getText();
-            addCozinheiro(nome, cpf, telefone, dataContratacao, especializacao, codChef.isEmpty() ? null : Integer.parseInt(codChef));
+            String turnoTrabalho = textFieldTurnoTrabalho.getText();
+            addAtendente(nome, cpf, telefone, dataContratacao, turnoTrabalho);
         });
         contentPane.add(btnCadastrar);
 
         tableModel = new DefaultTableModel();
-        tableModel.addColumn("IdCozinheiro");
+        tableModel.addColumn("IdAtendente");
         tableModel.addColumn("Nome");
         tableModel.addColumn("CPF");
         tableModel.addColumn("Telefone");
         tableModel.addColumn("Data Contratação");
-        tableModel.addColumn("Especialização");
-        tableModel.addColumn("CodChef");
+        tableModel.addColumn("Turno de Trabalho");
 
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setBounds(30, 400, 720, 150);
+        scrollPane.setBounds(30, 350, 720, 200);
         contentPane.add(scrollPane);
 
         JButton btnExcluir = new JButton("Excluir");
-        btnExcluir.setBounds(270, 350, 100, 25);
+        btnExcluir.setBounds(270, 310, 100, 25);
         btnExcluir.addActionListener(e -> {
             int selectedRow = table.getSelectedRow();
             if (selectedRow != -1) {
-                int idCozinheiro = (int) tableModel.getValueAt(selectedRow, 0);
-                deleteCozinheiro(idCozinheiro);
+                int idAtendente = (int) tableModel.getValueAt(selectedRow, 0);
+                deleteAtendente(idAtendente);
             } else {
-                JOptionPane.showMessageDialog(null, "Selecione um cozinheiro para excluir.");
+                JOptionPane.showMessageDialog(null, "Selecione um atendente para excluir.");
             }
         });
         contentPane.add(btnExcluir);
 
-        loadCozinheiroData();
+        loadAtendenteData();
     }
 
-    private void addCozinheiro(String nome, String cpf, String telefone, String dataContratacao, String especializacao, Integer codChef) {
+    private void addAtendente(String nome, String cpf, String telefone, String dataContratacao, String turnoTrabalho) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
             conn.setAutoCommit(false);
 
@@ -159,24 +147,23 @@ public class CadastroCozinheiro extends JFrame {
                 stmtFuncionario.setString(2, cpf);
                 stmtFuncionario.setString(3, telefone);
                 stmtFuncionario.setDate(4, java.sql.Date.valueOf(dataContratacao));
-                stmtFuncionario.setString(5, "Cozinheiro");
+                stmtFuncionario.setString(5, "Atendente");
 
                 stmtFuncionario.executeUpdate();
                 ResultSet keys = stmtFuncionario.getGeneratedKeys();
                 if (keys.next()) idFuncionario = keys.getInt(1);
             }
 
-            String insertCozinheiro = "INSERT INTO Cozinheiro (IdCozinheiro, Especialização, CodChef) VALUES (?, ?, ?)";
-            try (PreparedStatement stmt = conn.prepareStatement(insertCozinheiro)) {
+            String insertAtendente = "INSERT INTO Atendente (IdAtendente, `Turno de Trabalho`) VALUES (?, ?)";
+            try (PreparedStatement stmt = conn.prepareStatement(insertAtendente)) {
                 stmt.setInt(1, idFuncionario);
-                stmt.setString(2, especializacao);
-                stmt.setObject(3, codChef, Types.INTEGER);
+                stmt.setString(2, turnoTrabalho);
                 stmt.executeUpdate();
             }
 
             conn.commit();
-            JOptionPane.showMessageDialog(null, "Cozinheiro cadastrado com sucesso!");
-            loadCozinheiroData();
+            JOptionPane.showMessageDialog(null, "Atendente cadastrado com sucesso!");
+            loadAtendenteData();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -184,19 +171,19 @@ public class CadastroCozinheiro extends JFrame {
         }
     }
 
-    private void loadCozinheiroData() {
+    private void loadAtendenteData() {
         tableModel.setRowCount(0);
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "SELECT c.IdCozinheiro, f.Nome, f.CPF, f.Telefone, f.DataContratação, c.Especialização, c.CodChef " +
-                           "FROM Cozinheiro c " +
-                           "JOIN Funcionário f ON c.IdCozinheiro = f.CodFuncionário";
+            String query = "SELECT a.IdAtendente, f.Nome, f.CPF, f.Telefone, f.DataContratação, a.`Turno de Trabalho` " +
+                           "FROM Atendente a " +
+                           "JOIN Funcionário f ON a.IdAtendente = f.CodFuncionário";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     tableModel.addRow(new Object[]{
-                        rs.getInt("IdCozinheiro"), rs.getString("Nome"), rs.getString("CPF"), 
+                        rs.getInt("IdAtendente"), rs.getString("Nome"), rs.getString("CPF"),
                         rs.getString("Telefone"), rs.getString("DataContratação"), 
-                        rs.getString("Especialização"), rs.getInt("CodChef")
+                        rs.getString("Turno de Trabalho")
                     });
                 }
             }
@@ -205,14 +192,14 @@ public class CadastroCozinheiro extends JFrame {
         }
     }
 
-    private void deleteCozinheiro(int idCozinheiro) {
+    private void deleteAtendente(int idAtendente) {
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
-            String query = "DELETE FROM Cozinheiro WHERE IdCozinheiro = ?";
+            String query = "DELETE FROM Atendente WHERE IdAtendente = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setInt(1, idCozinheiro);
+                stmt.setInt(1, idAtendente);
                 stmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Cozinheiro excluído com sucesso!");
-                loadCozinheiroData();
+                JOptionPane.showMessageDialog(null, "Atendente excluído com sucesso!");
+                loadAtendenteData();
             }
         } catch (SQLException e) {
             e.printStackTrace();

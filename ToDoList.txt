@@ -5,7 +5,7 @@ RQ2: Deve ser possível listar os dados de todas as entidades   [X]
 RQ3: Deve ser possível somar, contar, calcular a média, máximo, mínimo de todas entidades   [X]
 RQ4: Implementar consultas SQL que utilizem junções para combinar dados de, pelo menos,
 duas tabelas relacionadas   [ ] 
-RQ5: Implementar consultas que combinem funções de agregação com a cláusula GROUP BY   [ ] 
+RQ5: Implementar consultas que combinem funções de agregação com a cláusula GROUP BY   [X] 
 RQ6: Criar, pelo menos, duas visões (views) que consolidem informações úteis e
 frequentemente consultadas (utilize a criatividade dentro do seu problema)   [ ] 
 RQ7: Possuir interface gráfica (livre escolha ao grupo entre desktop, web ou mobile)   [X]

@@ -22,7 +22,7 @@ USE `mydb` ;
 -- Table `mydb`.`Funcionário`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Funcionário` (
-  `CodFuncionário` INT NOT NULL,
+  `CodFuncionário` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(45) NOT NULL,
   `CPF` CHAR(11) NOT NULL,
   `Telefone` VARCHAR(45) NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Gerente` (
   `Nível de Gestão` VARCHAR(45) NOT NULL,
   `CodGerente` INT NOT NULL,
   PRIMARY KEY (`CodGerente`),
-  CONSTRAINT `pk_Gerente_Funcionario`
+  CONSTRAINT `pk_Gerente_funcionário`
     FOREIGN KEY (`CodGerente`)
     REFERENCES `mydb`.`Funcionário` (`CodFuncionário`)
     ON DELETE RESTRICT
@@ -66,15 +66,18 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Evento` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+ALTER TABLE `mydb`.`Evento`
+  MODIFY COLUMN `codEvento` INT NOT NULL AUTO_INCREMENT,
+  AUTO_INCREMENT = 20000;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`Prato`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Prato` (
   `CodPrato` INT NOT NULL,
-  `Tempo de Preparo` DATETIME NOT NULL,
-  `Preço` DECIMAL(3,2) NOT NULL,
-  `Descrição` VARCHAR(45) NOT NULL,
+  `Tempo de Preparo` TIME NOT NULL,
+  `Preço` DECIMAL(5,2) NOT NULL,
+  `Descrição` VARCHAR(100) NOT NULL,
   `Nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`CodPrato`))
 ENGINE = InnoDB;
@@ -89,7 +92,11 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Cliente` (
   `Telefone` VARCHAR(45) NOT NULL,
   `Número de Fidelidade` INT NOT NULL,
   PRIMARY KEY (`CodCliente`))
-ENGINE = InnoDB;
+ENGINE = INNODB;
+
+ALTER TABLE `mydb`.`Cliente`
+  MODIFY COLUMN `CodCliente` INT NOT NULL AUTO_INCREMENT,
+  AUTO_INCREMENT = 8000;
 
 
 -- -----------------------------------------------------
@@ -107,11 +114,13 @@ ENGINE = InnoDB;
 -- Table `mydb`.`Fornecedor`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`Fornecedor` (
-  `CodFornecedor` INT NOT NULL,
+  `CodFornecedor` INT NOT NULL AUTO_INCREMENT,
   `Nome` VARCHAR(45) NOT NULL,
   `Telefone` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`CodFornecedor`))
-ENGINE = InnoDB;
+ENGINE = INNODB;
+
+ALTER TABLE `mydb`.`Fornecedor` AUTO_INCREMENT = 100;
 
 
 -- -----------------------------------------------------
@@ -171,7 +180,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Ingrediente` (
   `Nome` VARCHAR(45) NOT NULL,
   `Data de Validade` DATE NOT NULL,
   PRIMARY KEY (`CodIngrediente`))
-ENGINE = InnoDB;
+ENGINE = INNODB;
+
+
+ALTER TABLE `mydb`.`Ingrediente`
+  MODIFY COLUMN `CodIngrediente` INT NOT NULL AUTO_INCREMENT,
+  AUTO_INCREMENT = 10000;
 
 
 -- -----------------------------------------------------
@@ -183,7 +197,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Cozinheiro` (
   `CodChef` INT NULL,
   PRIMARY KEY (`IdCozinheiro`),
   INDEX `pk_Cozinheiro_Cozinheiro_idx` (`CodChef` ASC) VISIBLE,
-  CONSTRAINT `pk_Cozinheiro_Funcionario`
+  CONSTRAINT `pk_Cozinheiro.funcionário`
     FOREIGN KEY (`IdCozinheiro`)
     REFERENCES `mydb`.`Funcionário` (`CodFuncionário`)
     ON DELETE RESTRICT
@@ -267,7 +281,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`Funcionário/Evento` (
   `CodEvento` INT NOT NULL,
   PRIMARY KEY (`CodFuncionário`, `CodEvento`),
   INDEX `pk_Evento_Trabalho_idx` (`CodEvento` ASC) VISIBLE,
-  CONSTRAINT `pk_Funcionario_Trabalho`
+  CONSTRAINT `pk_funcionário_Trabalho`
     FOREIGN KEY (`CodFuncionário`)
     REFERENCES `mydb`.`Funcionário` (`CodFuncionário`)
     ON DELETE RESTRICT
@@ -283,3 +297,109 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO Funcionário (Nome, CPF, Telefone, DataContratação, TipodeFuncionário) VALUES
+('João Silva', '12345678900', '21999999999', '2022-05-01', 'Atendente'),
+('Maria Oliveira', '98765432100', '21988888888', '2021-11-15', 'Cozinheiro'),
+('Carlos Souza', '11122233344', '21977777777', '2020-01-20', 'Gerente'),
+('Fernanda Costa', '33344455566', '21966666666', '2023-02-10', 'Atendente'),
+('Ricardo Lima', '55566677788', '21955555555', '2021-07-05', 'Cozinheiro'),
+('Cláudia Mendes', '88899900011', '21944444444', '2019-09-12', 'Gerente'),
+('Luís Rocha', '22233344455', '21933333333', '2020-12-08', 'Atendente'),
+('Rafaela Braga', '44455566677', '21922222222', '2023-06-18', 'Cozinheiro'),
+('Bruno Ferreira', '66677788899', '21911111111', '2021-04-03', 'Gerente'),
+('Camila Silva', '77788899900', '21900000000', '2022-11-25', 'Atendente');
+
+
+
+INSERT INTO Atendente (IdAtendente, `Turno de Trabalho`) VALUES
+(1, 'Manhã'),
+(4, 'Tarde'),
+(7, 'Noite'),
+(10, 'Manhã');
+
+
+INSERT INTO Cozinheiro (IdCozinheiro, Especialização, CodChef) VALUES 
+(2, 'Massas', NULL),
+(5, 'Carnes', 2), 
+(8, 'Sobremesas', 5);
+
+INSERT INTO Gerente (CodGerente, Departamento, `Nível de Gestão`) VALUES
+(3, 'Operacional', 'Pleno'),
+(6, 'Financeiro', 'Sênior'),
+(9, 'Recursos Humanos', 'Júnior');
+
+INSERT INTO Cliente (Nome, Telefone, `Número de Fidelidade`) VALUES
+('Ana Paula', '21966666666', '123456'),
+('Pedro Lima', '21955555555', '789101'),
+('Lucas Almeida', '21944444444', '456789'),
+('Mariana Torres', '21933333333', '987654'),
+('Felipe Martins', '21922222222', '654321'),
+('Juliana Gonçalves', '21911111111', '112233'),
+('Bruno Carvalho', '21900000000', '223344'),
+('Isabela Souza', '21999998888', '334455'),
+('Gabriel Castro', '21988887777', '445566'),
+('Letícia Pereira', '21977776666', '556677');
+
+INSERT INTO Fornecedor (CodFornecedor, Nome, Telefone) VALUES
+(1, 'Distribuidora Alimentos Frescos', '21999999999'),
+(2, 'Casa dos Laticínios', '21988888888'),
+(3, 'Pescados do Atlântico', '21977777777'),
+(4, 'Hortifruti Qualidade', '21966666666'),
+(5, 'Grãos & Cereais', '21955555555'),
+(6, 'Especiarias Orientais', '21944444444'),
+(7, 'Carne e Cia', '21933333333'),
+(8, 'Molhos e Conservas', '21922222222'),
+(9, 'Padaria Suprema', '21911111111'),
+(10, 'Adega Gourmet', '21900000000');
+
+
+
+
+INSERT INTO Ingrediente (Nome, `Data de Validade`, `Unidade de Medida`, Quantidade) VALUES
+('Cebola', '2024-12-29', 'kg', 15.0),
+('Alho', '2025-01-15', 'kg', 8.0),
+('Pimenta do Reino', '2025-02-10', 'g', 500),
+('Orégano', '2025-03-01', 'g', 300),
+('Azeite de Oliva', '2025-06-15', 'litros', 10.0),
+('Arroz Arbóreo', '2025-05-30', 'kg', 18.0),
+('Camarão', '2024-12-25', 'kg', 12.0),
+('Filé Mignon', '2024-12-20', 'kg', 20.0),
+('Linguiça', '2024-12-18', 'kg', 10.0),
+('Couve', '2024-12-22', 'unidades', 30),
+('Batata', '2024-12-28', 'kg', 25.0),
+('Molho de Tomate', '2025-01-10', 'litros', 15.0),
+('Farinha de Mandioca', '2025-03-01', 'kg', 10.0),
+('Queijo Cheddar', '2024-12-26', 'kg', 7.0),
+('Pancetta', '2024-12-24', 'kg', 5.0),
+('Cenoura', '2024-12-20', 'kg', 12.0),
+('Molho de Soja', '2025-01-15', 'litros', 5.0),
+('Coco Ralado', '2024-12-31', 'kg', 4.0),
+('Pimentão Vermelho', '2024-12-21', 'unidades', 25),
+('Leite de Coco', '2025-01-05', 'litros', 6.0),
+('Nozes', '2025-02-15', 'kg', 3.0),
+('Peixe Branco', '2024-12-27', 'kg', 10.0),
+('Carne Suína', '2024-12-22', 'kg', 8.0),
+('Ervilhas', '2025-01-30', 'kg', 10.0),
+('Champignon', '2024-12-26', 'kg', 5.0),
+('Abóbora', '2024-12-24', 'unidades', 10),
+('Vinho Branco', '2025-03-01', 'litros', 8.0),
+('Cebolinha', '2024-12-15', 'maços', 20),
+('Salsinha', '2024-12-15', 'maços', 20),
+('Requeijão', '2024-12-31', 'kg', 6.0);
+
+
+
+INSERT INTO Mesa (Número, Capacidade, Status) VALUES
+(1, 4, 'Disponível'),
+(2, 6, 'Ocupada'),
+(3, 2, 'Reservada'),
+(4, 8, 'Disponível'),
+(5, 4, 'Ocupada'),
+(6, 6, 'Reservada'),
+(7, 2, 'Disponível'),
+(8, 8, 'Ocupada'),
+(9, 4, 'Disponível'),
+(10, 6, 'Reservada');
+
+

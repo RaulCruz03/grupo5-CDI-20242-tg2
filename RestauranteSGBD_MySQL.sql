@@ -478,3 +478,10 @@ INSERT INTO `mydb`.`Prato` (CodPrato, `Tempo de Preparo`, Preço, Descrição, N
 (21, '00:15:00', 18.00, 'Sobremesa cremosa com calda de maracujá.', 'Mousse de Maracujá'),
 (22, '00:10:00', 15.00, 'Sorvete com chantilly e calda de chocolate.', 'Taça de Sorvete Especial');
 
+-- Eventos
+INSERT INTO Evento (codEvento, `Data`, `Descrição`, `N° de Participantes`, codOrganizador) VALUES
+(101, '2024-12-20', 'Confraternização de Fim de Ano', 150, 9), 
+(102, '2024-12-25', 'Almoço de Natal', 200, 6), 
+(103, '2025-01-01', 'Reveillon Especial', 250, 3),
+(104, '2024-12-31', 'Festa de Ano Novo', 300, 3); 
+

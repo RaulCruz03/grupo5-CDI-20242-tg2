@@ -315,6 +315,31 @@ SELECT
                 INNER JOIN Prato pr ON i.CodPrato = pr.CodPrato
                 GROUP BY p.CodPedido, p.`Data/Hora`, p.Status, c.Nome, f.Nome, p.`n°Mesa`
                 ORDER BY p.CodPedido;
+                
+CREATE VIEW fornecimentos AS
+SELECT 
+    f.Nome AS Fornecedor,
+    i.Nome AS Ingrediente,
+    i.Quantidade,  -- A quantidade está na tabela Ingrediente
+    i.`Unidade de Medida`,
+    i.`Data de Validade`
+FROM Fornecimento fo
+INNER JOIN Fornecedor f ON fo.CodFornecedor = f.CodFornecedor
+INNER JOIN Ingrediente i ON fo.CodIngrediente = i.CodIngrediente
+ORDER BY f.Nome, i.Nome;
+
+CREATE VIEW funcionario_evento AS
+SELECT 
+    f.Nome AS Funcionário,
+    e.Descrição AS Evento,
+    e.Data AS DataEvento,
+    e.`N° de Participantes` AS Participantes
+FROM `Funcionário/Evento` fe
+INNER JOIN `Funcionário` f ON fe.CodFuncionário = f.CodFuncionário
+INNER JOIN `Evento` e ON fe.CodEvento = e.codEvento
+ORDER BY f.Nome, e.Data;
+
+
 
 INSERT INTO Funcionário (Nome, CPF, Telefone, DataContratação, TipodeFuncionário) VALUES
 ('João Silva', '12345678900', '21999999999', '2022-05-01', 'Atendente'),

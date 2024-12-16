@@ -69,7 +69,6 @@ public class Menu extends JFrame {
         comboBox.addItem("Pedido");
         comboBox.addItem("Cliente");
         comboBox.addItem("Mesa");
-        comboBox.addItem("Item");
         comboBox.addItem("Fornecimento");
         comboBox.addItem("Funcionário/Evento");
         
@@ -169,11 +168,11 @@ public class Menu extends JFrame {
 	            ci.setVisible(true); // Abre a tela de cadastro de ingrediente
 	            dispose(); // Fecha a tela atual
 	            break;
-//	        case "Prato":
-//	            CadastroPrato cp = new CadastroPrato();
-//	            cp.setVisible(true); // Abre a tela de cadastro de prato
-//	            dispose(); // Fecha a tela atual
-//	            break;
+	        case "Prato":
+	            CadastroPrato cp = new CadastroPrato();
+	            cp.setVisible(true); // Abre a tela de cadastro de prato
+	            dispose(); // Fecha a tela atual
+	            break;
 	        case "Pedido":
 	            CadastroPedido cpdo = new CadastroPedido();
 	            cpdo.setVisible(true); // Abre a tela de cadastro de pedido
@@ -189,11 +188,6 @@ public class Menu extends JFrame {
 	            cm.setVisible(true); // Abre a tela de cadastro de mesa
 	            dispose(); // Fecha a tela atual
 	            break;
-//	        case "Item":
-//	            CadastroItem ci2 = new CadastroItem();
-//	            ci2.setVisible(true); // Abre a tela de cadastro de item
-//	            dispose(); // Fecha a tela atual
-//	            break;
 //	        case "Fornecimento":
 //	            CadastroFornecimento cf2 = new CadastroFornecimento();
 //	            cf2.setVisible(true); // Abre a tela de cadastro de fornecimento

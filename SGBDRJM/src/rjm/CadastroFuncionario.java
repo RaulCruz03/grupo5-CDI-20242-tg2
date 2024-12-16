@@ -106,11 +106,11 @@ public class CadastroFuncionario extends JFrame {
         textField_2.setBounds(131, 154, 155, 19);
         contentPane.add(textField_2);
 
-        JLabel lblData = new JLabel("Data de Contratação (AAAA-MM-DD)");
+        JLabel lblData = new JLabel("Data de Contratação (A-M-D)");
         lblData.setBounds(24, 186, 200, 13);
         contentPane.add(lblData);
         textField_3 = new JTextField();
-        textField_3.setBounds(231, 183, 141, 19);
+        textField_3.setBounds(195, 183, 141, 19);
         contentPane.add(textField_3);
 
         JLabel lblTipo = new JLabel("Tipo de Funcionário");
@@ -133,6 +133,30 @@ public class CadastroFuncionario extends JFrame {
         table = new JTable(tableModel);
         table.setBounds(66, 349, 853, 381);
         contentPane.add(table);
+        
+        JLabel lblNewLabel_1 = new JLabel("Código");
+        lblNewLabel_1.setBounds(66, 326, 91, 13);
+        contentPane.add(lblNewLabel_1);
+        
+        JLabel lblNewLabel_2 = new JLabel("Nome");
+        lblNewLabel_2.setBounds(207, 326, 79, 13);
+        contentPane.add(lblNewLabel_2);
+        
+        JLabel lblNewLabel_3 = new JLabel("CPF");
+        lblNewLabel_3.setBounds(352, 326, 91, 13);
+        contentPane.add(lblNewLabel_3);
+        
+        JLabel lblNewLabel_4 = new JLabel("Telefone");
+        lblNewLabel_4.setBounds(493, 326, 77, 13);
+        contentPane.add(lblNewLabel_4);
+        
+        JLabel lblNewLabel_5 = new JLabel("DataContratação");
+        lblNewLabel_5.setBounds(637, 326, 109, 13);
+        contentPane.add(lblNewLabel_5);
+        
+        JLabel lblNewLabel_6 = new JLabel("Tipo de Funcionário");
+        lblNewLabel_6.setBounds(777, 326, 170, 13);
+        contentPane.add(lblNewLabel_6);
     }
 
     private void addFuncionario() {

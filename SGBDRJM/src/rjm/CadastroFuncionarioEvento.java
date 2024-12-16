@@ -176,7 +176,7 @@ public class CadastroFuncionarioEvento extends JFrame {
                 stmt.setInt(1, codFuncionario);
                 stmt.setInt(2, codEvento);
                 stmt.executeUpdate();
-                JOptionPane.showMessageDialog(null, "Funcionário/Event registrado com sucesso!");
+                JOptionPane.showMessageDialog(null, "Funcionário/Evento registrado com sucesso!");
                 loadFuncionarioEventoData();
             }
         } catch (SQLException e) {

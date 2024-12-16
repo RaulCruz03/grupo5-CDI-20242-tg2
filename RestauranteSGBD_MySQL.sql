@@ -237,6 +237,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`Fornecimento` (
   `CodFornecedor` INT NOT NULL,
   `CodIngrediente` INT NOT NULL,
+  `Quantidade` INT NOT NULL,
   PRIMARY KEY (`CodFornecedor`, `CodIngrediente`),
   INDEX `pk_Fornecimento_Ingrediente_idx` (`CodIngrediente` ASC) VISIBLE,
   CONSTRAINT `pk_Fornecimento_Fornecedor`
@@ -316,11 +317,11 @@ SELECT
                 GROUP BY p.CodPedido, p.`Data/Hora`, p.Status, c.Nome, f.Nome, p.`n°Mesa`
                 ORDER BY p.CodPedido;
                 
-CREATE VIEW fornecimentos AS
+CREATE OR REPLACE VIEW fornecimentos AS
 SELECT 
     f.Nome AS Fornecedor,
     i.Nome AS Ingrediente,
-    i.Quantidade,  -- A quantidade está na tabela Ingrediente
+    fo.Quantidade AS Quantidade,  -- Agora a quantidade vem da tabela Fornecimento
     i.`Unidade de Medida`,
     i.`Data de Validade`
 FROM Fornecimento fo
@@ -328,15 +329,16 @@ INNER JOIN Fornecedor f ON fo.CodFornecedor = f.CodFornecedor
 INNER JOIN Ingrediente i ON fo.CodIngrediente = i.CodIngrediente
 ORDER BY f.Nome, i.Nome;
 
+
 CREATE VIEW funcionario_evento AS
 SELECT 
-    f.Nome AS Funcionário,
-    e.Descrição AS Evento,
-    e.Data AS DataEvento,
-    e.`N° de Participantes` AS Participantes
+    fe.CodFuncionário,
+    f.Nome AS NomeFuncionario,
+	 fe.CodEvento,
+	 e.Descrição AS DescricaoEvento
 FROM `Funcionário/Evento` fe
-INNER JOIN `Funcionário` f ON fe.CodFuncionário = f.CodFuncionário
-INNER JOIN `Evento` e ON fe.CodEvento = e.codEvento
+JOIN Funcionário f ON fe.CodFuncionário = f.CodFuncionário
+JOIN Evento e ON fe.CodEvento = e.codEvento
 ORDER BY f.Nome, e.Data;
 
 

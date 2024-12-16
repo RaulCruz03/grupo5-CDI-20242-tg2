@@ -98,23 +98,35 @@ public class Menu extends JFrame {
 			}
 		});
 		btnVerPedidos.setFont(new Font("Tahoma", Font.BOLD, 15));
+		
+		JButton btnCardapio = new JButton("Cardápio");
+		btnCardapio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CardapioFrame cf = new CardapioFrame();
+				cf.setVisible(true);
+				dispose();
+			}
+		});
+		btnCardapio.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(51)
 					.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 181, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
 					.addComponent(btnAbrir, GroupLayout.PREFERRED_SIZE, 101, GroupLayout.PREFERRED_SIZE)
 					.addGap(45))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(59)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 311, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(61, Short.MAX_VALUE))
+					.addContainerGap(93, Short.MAX_VALUE))
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(86)
 					.addComponent(btnVerPedidos)
-					.addContainerGap(256, Short.MAX_VALUE))
+					.addGap(56)
+					.addComponent(btnCardapio, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(79, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -125,7 +137,9 @@ public class Menu extends JFrame {
 						.addComponent(comboBox, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
 						.addComponent(btnAbrir, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
-					.addComponent(btnVerPedidos)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnVerPedidos)
+						.addComponent(btnCardapio, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 					.addContainerGap(136, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
@@ -188,16 +202,16 @@ public class Menu extends JFrame {
 	            cm.setVisible(true); // Abre a tela de cadastro de mesa
 	            dispose(); // Fecha a tela atual
 	            break;
-//	        case "Fornecimento":
-//	            CadastroFornecimento cf2 = new CadastroFornecimento();
-//	            cf2.setVisible(true); // Abre a tela de cadastro de fornecimento
-//	            dispose(); // Fecha a tela atual
-//	            break;
-//	        case "Funcionário/Evento":
-//	            CadastroFuncionarioEvento cfe = new CadastroFuncionarioEvento();
-//	            cfe.setVisible(true); // Abre a tela de cadastro de funcionário/evento
-//	            dispose(); // Fecha a tela atual
-//	            break;
+	        case "Fornecimento":
+	            CadastroFornecimento cf2 = new CadastroFornecimento();
+	            cf2.setVisible(true); // Abre a tela de cadastro de fornecimento
+	            dispose(); // Fecha a tela atual
+	            break;
+	        case "Funcionário/Evento":
+	            CadastroFuncionarioEvento cfe = new CadastroFuncionarioEvento();
+	            cfe.setVisible(true); // Abre a tela de cadastro de funcionário/evento
+	            dispose(); // Fecha a tela atual
+	            break;
 	        default:
 	            JOptionPane.showMessageDialog(this, "Selecione uma opção válida");
 	            break;
